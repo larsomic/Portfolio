@@ -6,6 +6,7 @@
   import { Separator } from "$lib/components/ui/separator/index.js";
   import AppSidebar from "$lib/components/app-sidebar.svelte";
   import favicon from "$lib/assets/favicon.svg";
+  import { page } from "$app/state";
 
   let { children } = $props();
 </script>
@@ -26,7 +27,11 @@
 
           <Breadcrumb.Separator class="hidden md:block" />
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Data Fetching</Breadcrumb.Page>
+            <Breadcrumb.Page
+              onclick={() => {
+                console.log(page.params);
+              }}>{page}</Breadcrumb.Page
+            >
           </Breadcrumb.Item>
         </Breadcrumb.List>
       </Breadcrumb.Root>
@@ -36,4 +41,3 @@
     </div>
   </Sidebar.Inset>
 </Sidebar.Provider>
-{@render children()}
