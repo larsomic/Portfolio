@@ -7,12 +7,20 @@
         url: "/projects",
         items: [
           {
-            title: "Routing",
-            url: "goodbye",
+            title: "My Portfolio",
+            url: "about-my-portfolio",
           },
           {
-            title: "Data Fetching",
-            url: "hello",
+            title: "Sabermetric Seer",
+            url: "sabermetric-seer",
+          },
+          {
+            title: "Fantasy Football",
+            url: "fantasy-football",
+          },
+          {
+            title: "March Madness",
+            url: "march-madness",
           },
         ],
       },
@@ -25,6 +33,10 @@
             url: "github",
           },
           {
+            title: "LinkedIn",
+            url: "linkedin",
+          },
+          {
             title: "Contact Me!",
             url: "contact-me",
           },
@@ -32,6 +44,13 @@
       },
     ],
   };
+
+  function openGithub() {
+    window.open("https://github.com/larsomic", "_blank");
+  }
+  function openLinkedIn() {
+    window.open("https://www.linkedin.com/in/larson2/", "_blank");
+  }
 </script>
 
 <script lang="ts">
@@ -44,7 +63,19 @@
 </script>
 
 <Sidebar.Root {...restProps} bind:ref>
-  <Sidebar.Header></Sidebar.Header>
+  <Sidebar.Header>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton class="data-[slot=sidebar-menu-button]:!p-1.5">
+          {#snippet child({ props })}
+            <a href="/" {...props}>
+              <span class="text-base font-semibold">Michael Larson</span>
+            </a>
+          {/snippet}
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Header>
   <Sidebar.Content>
     {#each data.navMain as group (group.title)}
       <Sidebar.Group>
@@ -57,7 +88,21 @@
                   isActive={"/" + item.url === page.url.pathname}
                 >
                   {#snippet child({ props })}
-                    <a href={item.url} {...props}>{item.title}</a>
+                    <a
+                      href={item.url}
+                      {...props}
+                      onclick={(e) => {
+                        if (item.url === "github") {
+                          e.preventDefault();
+                          openGithub();
+                        } else if (item.url === "linkedin") {
+                          e.preventDefault();
+                          openLinkedIn();
+                        } else {
+                          return;
+                        }
+                      }}>{item.title}</a
+                    >
                   {/snippet}
                 </Sidebar.MenuButton>
               </Sidebar.MenuItem>
