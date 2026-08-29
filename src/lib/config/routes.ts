@@ -66,3 +66,15 @@ export function getHref(link: NavLink): string {
 export function getAllLinks(routes: NavItem[]): NavLink[] {
   return routes.flatMap((item) => (isNavGroup(item) ? item.items : [item]));
 }
+
+export function humanizeSlug(slug: string): string {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export function getTitleForSlug(slug: string): string {
+  const link = getAllLinks(ROUTES).find((l) => l.slug === slug);
+  return link ? link.title : humanizeSlug(slug);
+}

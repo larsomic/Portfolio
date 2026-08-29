@@ -173,11 +173,13 @@
     </div>
 
     <DropdownMenu.Root bind:open={leadersOpen}>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline" class="w-48 justify-between font-normal">
-          {category.label}
-          <ChevronDown />
-        </Button>
+      <DropdownMenu.Trigger>
+        {#snippet child({ props })}
+          <Button {...props} variant="outline" class="w-48 justify-between font-normal">
+            {category.label}
+            <ChevronDown />
+          </Button>
+        {/snippet}
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         class="max-h-72 w-48 overflow-y-auto"
@@ -200,11 +202,13 @@
     </DropdownMenu.Root>
 
     <DropdownMenu.Root bind:open={seasonOpen}>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="outline" class="w-32 justify-between font-normal">
-          {season}
-          <ChevronDown />
-        </Button>
+      <DropdownMenu.Trigger>
+        {#snippet child({ props })}
+          <Button {...props} variant="outline" class="w-32 justify-between font-normal">
+            {season}
+            <ChevronDown />
+          </Button>
+        {/snippet}
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         class="max-h-72 w-32 overflow-y-auto"
