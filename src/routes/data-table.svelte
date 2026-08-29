@@ -5,7 +5,9 @@
     createTable,
     FlexRender,
   } from "@tanstack/svelte-table";
+  import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
   import * as Table from "$lib/components/ui/table/index.js";
+  import { cn } from "$lib/utils.js";
   import { features, type DataTableFeatures } from "./data-table-features.js";
 
   type DataTableProps<TData extends RowData> = {
@@ -34,7 +36,28 @@
           {#each headerGroup.headers as header (header.id)}
             <Table.Head colspan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <FlexRender {header} />
+                {#if header.column.getCanSort()}
+                  <button
+                    type="button"
+                    class={cn(
+                      "-ms-3 flex h-full items-center gap-2 select-none p-3 text-sm font-medium transition-colors hover:text-foreground",
+                      header.column.getIsSorted() === false &&
+                        "text-muted-foreground",
+                    )}
+                    onclick={() => header.column.toggleSorting()}
+                  >
+                    <FlexRender {header} />
+                    {#if header.column.getIsSorted() === false}
+                      <ArrowUpDown class="size-3.5" />
+                    {:else if header.column.getIsSorted() === "asc"}
+                      <ArrowUp class="size-3.5" />
+                    {:else}
+                      <ArrowDown class="size-3.5" />
+                    {/if}
+                  </button>
+                {:else}
+                  <FlexRender {header} />
+                {/if}
               {/if}
             </Table.Head>
           {/each}
