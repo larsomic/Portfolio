@@ -69,7 +69,9 @@
     loading = true;
     errorMessage = null;
 
-    const url = `${API_BASE}?leaderCategories=${category.id}&season=${season}&limit=25`;
+    // statGroup restricts results to hitters or pitchers; without it the API
+    // returns separate catching/pitching/hitting leader sets that get mixed together
+    const url = `${API_BASE}?leaderCategories=${category.id}&season=${season}&statGroup=${category.group}&limit=25`;
 
     fetch(url, { signal: controller.signal })
       .then(async (res) => {
@@ -77,6 +79,7 @@
           throw new Error(`Request failed with status ${res.status}`);
         return res.json() as Promise<{
           leagueLeaders: Array<{
+            statGroup?: string;
             leaders: Array<{
               rank: number;
               value: string;
@@ -88,9 +91,12 @@
         }>;
       })
       .then((data) => {
-        const allLeaders = (data.leagueLeaders ?? []).flatMap(
-          (entry) => entry.leaders ?? [],
-        );
+        const allLeaders = (data.leagueLeaders ?? [])
+          .filter(
+            (entry) =>
+              !entry.statGroup || entry.statGroup === category.group,
+          )
+          .flatMap((entry) => entry.leaders ?? []);
         leaders = allLeaders.map((l) => ({
           rank: l.rank,
           personId: l.person?.id ?? 0,
