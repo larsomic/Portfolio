@@ -7,8 +7,20 @@
   import AppSidebar from "$lib/components/app-sidebar.svelte";
   import favicon from "$lib/assets/favicon.svg";
   import { page } from "$app/state";
+  import { getTitleForSlug } from "$lib/config/routes.js";
 
   let { children } = $props();
+
+  const crumbs = $derived(
+    page.url.pathname
+      .split("/")
+      .filter(Boolean)
+      .map((segment, i, segments) => ({
+        href: "/" + segments.slice(0, i + 1).join("/"),
+        title: getTitleForSlug(segment),
+        isLast: i === segments.length - 1,
+      })),
+  );
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
@@ -16,23 +28,25 @@
 <Sidebar.Provider>
   <AppSidebar />
   <Sidebar.Inset>
-    <header class="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+    <header class="flex min-h-16 shrink-0 items-center gap-2 border-b px-4 py-2">
       <Sidebar.Trigger class="-ms-1" />
       <Separator orientation="vertical" class="me-2 h-4" />
-      <Breadcrumb.Root>
+      <Breadcrumb.Root class="min-w-0 flex-1">
         <Breadcrumb.List>
-          <Breadcrumb.Item class="hidden md:block">
+          <Breadcrumb.Item>
             <Breadcrumb.Link href="/">Michael Larson</Breadcrumb.Link>
           </Breadcrumb.Item>
 
-          <Breadcrumb.Separator class="hidden md:block" />
-          <Breadcrumb.Item>
-            <Breadcrumb.Page
-              onclick={() => {
-                console.log(page.params);
-              }}>{page}</Breadcrumb.Page
-            >
-          </Breadcrumb.Item>
+          {#each crumbs as crumb (crumb.href)}
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+              {#if crumb.isLast}
+                <Breadcrumb.Page>{crumb.title}</Breadcrumb.Page>
+              {:else}
+                <Breadcrumb.Link href={crumb.href}>{crumb.title}</Breadcrumb.Link>
+              {/if}
+            </Breadcrumb.Item>
+          {/each}
         </Breadcrumb.List>
       </Breadcrumb.Root>
     </header>
