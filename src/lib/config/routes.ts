@@ -2,6 +2,7 @@ export interface NavLink {
   title: string;
   slug: string;
   isExternal?: boolean;
+  items?: NavLink[];
 }
 
 export interface NavGroup {
@@ -22,6 +23,11 @@ export const ROUTES: NavGroup[] = [
           {
             title: "Sabermetric Seer",
             slug: "sabermetric-seer",
+            items: [
+              { title: "League Leaders", slug: "sabermetric-seer/league-leaders" },
+              { title: "Standings", slug: "sabermetric-seer/standings" },
+              { title: "Transactions", slug: "sabermetric-seer/transactions" },
+            ],
           },
           {
             title: "Fantasy Football",
@@ -38,12 +44,12 @@ export const ROUTES: NavGroup[] = [
         items: [
           {
             title: "GitHub",
-            slug: "github",
+            slug: "https://github.com/larsomic",
             isExternal: true
           },
           {
             title: "LinkedIn",
-            slug: "linkedin",
+            slug: "https://www.linkedin.com/in/larson2/",
             isExternal: true
           },
           {
@@ -64,7 +70,10 @@ export function getHref(link: NavLink): string {
 }
 
 export function getAllLinks(routes: NavItem[]): NavLink[] {
-  return routes.flatMap((item) => (isNavGroup(item) ? item.items : [item]));
+  const links = routes.flatMap((item) => (isNavGroup(item) ? item.items : [item]));
+  return links.flatMap((link) =>
+    link.items ? [link, ...getAllLinks(link.items)] : [link],
+  );
 }
 
 export function humanizeSlug(slug: string): string {

@@ -1,65 +1,39 @@
-<script lang="ts" module>
-  import { page } from "$app/state";
-  const data = {
-    navMain: [
-      {
-        title: "Projects",
-        url: "/projects",
-        items: [
-          {
-            title: "My Portfolio",
-            url: "about-my-portfolio",
-          },
-          {
-            title: "Sabermetric Seer",
-            url: "sabermetric-seer",
-          },
-          {
-            title: "Fantasy Football",
-            url: "fantasy-football",
-          },
-          {
-            title: "March Madness",
-            url: "march-madness",
-          },
-        ],
-      },
-      {
-        title: "Links",
-        url: "/links",
-        items: [
-          {
-            title: "GitHub",
-            url: "github",
-          },
-          {
-            title: "LinkedIn",
-            url: "linkedin",
-          },
-          {
-            title: "Contact Me!",
-            url: "contact-me",
-          },
-        ],
-      },
-    ],
-  };
-
-  function openGithub() {
-    window.open("https://github.com/larsomic", "_blank");
-  }
-  function openLinkedIn() {
-    window.open("https://www.linkedin.com/in/larson2/", "_blank");
-  }
-</script>
-
 <script lang="ts">
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import type { ComponentProps } from "svelte";
+  import { page } from "$app/state";
+  import { ROUTES, getHref, type NavLink } from "$lib/config/routes.js";
+  import { useSidebar } from "$lib/components/ui/sidebar/context.svelte.js";
+
   let {
     ref = $bindable(null),
     ...restProps
   }: ComponentProps<typeof Sidebar.Root> = $props();
+
+  function isActive(link: NavLink): boolean {
+    return page.url.pathname === getHref(link);
+  }
+
+  function isParentActive(link: NavLink): boolean {
+    const href = getHref(link);
+    return (
+      page.url.pathname.startsWith(href + "/") ||
+      (link.items?.some((child) => isActive(child)) ?? false)
+    );
+  }
+
+  const sidebar = useSidebar();
+
+  function handleClick(e: MouseEvent, link: NavLink) {
+    if (link.isExternal) {
+      e.preventDefault();
+      window.open(link.slug, "_blank", "noopener,noreferrer");
+    }
+    // Close the slide-out menu after clicking a link on mobile only
+    if (sidebar.isMobile) {
+      sidebar.setOpenMobile(false);
+    }
+  }
 </script>
 
 <Sidebar.Root {...restProps} bind:ref>
@@ -77,34 +51,44 @@
     </Sidebar.Menu>
   </Sidebar.Header>
   <Sidebar.Content>
-    {#each data.navMain as group (group.title)}
+    {#each ROUTES as group (group.title)}
       <Sidebar.Group>
         <Sidebar.GroupLabel>{group.title}</Sidebar.GroupLabel>
         <Sidebar.GroupContent>
           <Sidebar.Menu>
             {#each group.items as item (item.title)}
-              <Sidebar.MenuItem>
+              <Sidebar.MenuItem data-sidebar="menu-item">
                 <Sidebar.MenuButton
-                  isActive={"/" + item.url === page.url.pathname}
+                  isActive={isActive(item) || isParentActive(item)}
                 >
                   {#snippet child({ props })}
                     <a
-                      href={item.url}
+                      href={getHref(item)}
                       {...props}
-                      onclick={(e) => {
-                        if (item.url === "github") {
-                          e.preventDefault();
-                          openGithub();
-                        } else if (item.url === "linkedin") {
-                          e.preventDefault();
-                          openLinkedIn();
-                        } else {
-                          return;
-                        }
-                      }}>{item.title}</a
-                    >
+                      onclick={(e) => handleClick(e, item)}
+                    >{item.title}</a>
                   {/snippet}
                 </Sidebar.MenuButton>
+                {#if item.items}
+                  <Sidebar.MenuSub>
+                    {#each item.items as sub (sub.title)}
+                      <Sidebar.MenuSubItem>
+                        <Sidebar.MenuSubButton
+                          isActive={isActive(sub)}
+                          size="sm"
+                        >
+                          {#snippet child({ props })}
+                            <a
+                              href={getHref(sub)}
+                              {...props}
+                              onclick={(e) => handleClick(e, sub)}
+                            >{sub.title}</a>
+                          {/snippet}
+                        </Sidebar.MenuSubButton>
+                      </Sidebar.MenuSubItem>
+                    {/each}
+                  </Sidebar.MenuSub>
+                {/if}
               </Sidebar.MenuItem>
             {/each}
           </Sidebar.Menu>
