@@ -1,4 +1,8 @@
-import { createColumnHelper } from "@tanstack/svelte-table";
+import {
+  createColumnHelper,
+  renderComponent,
+} from "@tanstack/svelte-table";
+import PlayerDialog from "$lib/components/player-dialog.svelte";
 import type { DataTableFeatures } from "../../data-table-features.js";
 
 export type Leader = {
@@ -21,6 +25,11 @@ export const columns = columnHelper.columns([
   columnHelper.accessor("player", {
     header: "Player",
     enableSorting: true,
+    cell: (context) =>
+      renderComponent(PlayerDialog, {
+        personId: context.row.original.personId,
+        fullName: context.row.original.player,
+      }),
   }),
   columnHelper.accessor("team", {
     header: "Team",
