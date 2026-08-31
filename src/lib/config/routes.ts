@@ -36,6 +36,13 @@ export const ROUTES: NavGroup[] = [
           {
             title: "Fantasy Football",
             slug: "fantasy-football",
+            items: [
+              { title: "League Members", slug: "fantasy-football" },
+              {
+                title: "Weekly Scores",
+                slug: "fantasy-football/weekly-scores",
+              },
+            ],
           },
           {
             title: "March Madness",
