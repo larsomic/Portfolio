@@ -27,6 +27,10 @@ export const ROUTES: NavGroup[] = [
               { title: "League Leaders", slug: "sabermetric-seer/league-leaders" },
               { title: "Standings", slug: "sabermetric-seer/standings" },
               { title: "Transactions", slug: "sabermetric-seer/transactions" },
+              {
+                title: "Compare Players",
+                slug: "sabermetric-seer/compare",
+              },
             ],
           },
           {
