@@ -6,6 +6,7 @@
     IconCalendarEvent,
     IconChartInfographic,
     IconDatabase,
+    IconExchange,
     IconMoonStars,
     IconStack2,
     IconTarget,
@@ -81,6 +82,19 @@
         "From-team and to-team on every move",
         "Move type plus the full description",
         "Player names open the same career pop-up",
+      ],
+    },
+    {
+      title: "Compare Players",
+      href: "/sabermetric-seer/compare",
+      icon: IconExchange,
+      blurb:
+        "Two careers on one axis. Search any player, living or retired, and put their seasons side by side.",
+      points: [
+        "Any two players, including Hall of Famers",
+        "24 metrics from home runs to WHIP",
+        "Rate stats derived from summed counting stats",
+        "Scale counting stats per 162 games to compare a career year",
       ],
     },
   ] as const;
