@@ -53,6 +53,10 @@ export const ROUTES: NavGroup[] = [
             title: "US Population Comparer",
             slug: "us-population-comparer",
           },
+          {
+            title: "Denver Accidents",
+            slug: "denver-accidents",
+          },
         ],
       },
       {
