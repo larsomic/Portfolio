@@ -131,8 +131,12 @@
 	}
 	body {
 		@apply bg-background text-foreground;
+		/* Nothing should ever scroll the document sideways; carousels
+		   handle their own overflow. */
+		overflow-x: clip;
 	}
 	html {
 		@apply font-sans;
+		overflow-x: clip;
 	}
 }

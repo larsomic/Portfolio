@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 # Local agent workflow artifacts
 .rpiv/
+
+# Pi agent settings
+.pi/
+static/for_llm/
