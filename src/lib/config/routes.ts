@@ -49,6 +49,10 @@ export const ROUTES: NavGroup[] = [
             title: "March Madness",
             slug: "march-madness",
           },
+          {
+            title: "US Population Comparer",
+            slug: "us-population-comparer",
+          },
         ],
       },
       {
