@@ -163,6 +163,29 @@ export async function fetchAccidentsForDay(
     .sort((a, b) => a.timeMs - b.timeMs);
 }
 
+/**
+ * Find the most recent calendar day that has at least one accident record.
+ * Reporting lags, so "today" (and often yesterday) is usually empty.
+ */
+export async function fetchLatestAccidentDate(
+  signal?: AbortSignal,
+): Promise<string | null> {
+  const params = new URLSearchParams({
+    $where: `reported_d::number <= ${Date.now()}`,
+    $select: "reported_d",
+    $order: "reported_d::number DESC",
+    $limit: "1",
+  });
+  const res = await fetch(`${BASE}/${DATASET}.json?${params}`, { signal });
+  if (!res.ok) throw new Error(`Data API error (${res.status})`);
+  const rows: RawRow[] = await res.json();
+  const ms = Number(rows[0]?.reported_d);
+  if (!Number.isFinite(ms)) return null;
+  const d = new Date(ms);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 export function fmtTime(ms: number): string {
   return new Date(ms).toLocaleTimeString([], {
     hour: "numeric",

@@ -9,29 +9,43 @@
   import { cn } from "$lib/utils.js";
   import {
     fetchAccidentsForDay,
+    fetchLatestAccidentDate,
     fmtTime,
     summarize,
     todayStr,
     type Accident,
   } from "$lib/denver-traffic.js";
 
-  let date = $state(todayStr(-1)); // yesterday — reporting lags a day
+  // Start on the most recent day that actually has data; reporting lags,
+  // so "today" (and often yesterday) is empty.
+  let date = $state<string | null>(null);
   let accidents = $state<Accident[]>([]);
-  let loading = $state(false);
+  let loading = $state(true);
   let error = $state<string | null>(null);
   let selectedId = $state<string | null>(null);
 
   const summary = $derived(summarize(accidents));
 
   function shiftDay(days: number) {
+    if (!date) return;
     const d = new SvelteDate(`${date}T12:00:00`);
     d.setDate(d.getDate() + days);
     const pad = (n: number) => String(n).padStart(2, "0");
     date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   }
 
+  // Bootstrap: find the latest day with data once, before any day fetch.
   $effect(() => {
-    void date;
+    if (date !== null) return;
+    const ctrl = new AbortController();
+    fetchLatestAccidentDate(ctrl.signal)
+      .then((d) => (date = d ?? todayStr(-1)))
+      .catch(() => (date = todayStr(-1)));
+    return () => ctrl.abort();
+  });
+
+  $effect(() => {
+    if (date === null) return;
     let aborted = false;
     (async () => {
       loading = true;
@@ -84,7 +98,7 @@
         <input
           type="date"
           class="border-input bg-background focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
-          value={date}
+          value={date ?? ""}
           max={todayStr()}
           onchange={(e) => {
             date = (e.currentTarget as HTMLInputElement).value;
@@ -93,18 +107,11 @@
           variant="outline"
           size="icon"
           aria-label="Next day"
-          disabled={date >= todayStr()}
+          disabled={!date || date >= todayStr()}
           onclick={() => shiftDay(1)}>
           <IconChevronRight />
         </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        class="text-muted-foreground"
-        onclick={() => (date = todayStr(-1))}>
-        Yesterday
-      </Button>
       {#if loading}
         <span class="text-muted-foreground animate-pulse text-sm">Loading…</span>
       {:else if !error}

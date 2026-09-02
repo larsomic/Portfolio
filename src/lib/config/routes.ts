@@ -54,8 +54,13 @@ export const ROUTES: NavGroup[] = [
             slug: "us-population-comparer",
           },
           {
-            title: "Denver Accidents",
-            slug: "denver-accidents",
+            title: "Colorado Data",
+            slug: "colorado-data",
+            items: [
+              { title: "Overview", slug: "colorado-data" },
+              { title: "Denver Accidents", slug: "denver-accidents" },
+              { title: "Cannabis Economy", slug: "colorado-data/cannabis-economy" },
+            ],
           },
         ],
       },
