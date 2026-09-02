@@ -24,6 +24,7 @@ export const ROUTES: NavGroup[] = [
             title: "Sabermetric Seer",
             slug: "sabermetric-seer",
             items: [
+              { title: "Game Center", slug: "sabermetric-seer/games" },
               { title: "League Leaders", slug: "sabermetric-seer/league-leaders" },
               { title: "Standings", slug: "sabermetric-seer/standings" },
               { title: "Transactions", slug: "sabermetric-seer/transactions" },
