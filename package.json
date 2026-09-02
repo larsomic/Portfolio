@@ -53,6 +53,7 @@
 		"@tanstack/svelte-table": "^9.1.2",
 		"d3-scale": "^4.0.2",
 		"lucide-svelte": "^1.0.1",
+		"maplibre-gl": "^6.6.0",
 		"mode-watcher": "^1.1.0"
 	}
 }
