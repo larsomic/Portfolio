@@ -27,8 +27,10 @@
 <ModeWatcher />
 <Sidebar.Provider>
   <AppSidebar />
-  <Sidebar.Inset>
-    <header class="flex min-h-16 shrink-0 items-center gap-2 border-b px-4 py-2">
+  <Sidebar.Inset class="min-w-0">
+    <header
+      class="relative z-20 flex min-h-16 shrink-0 items-center gap-2 border-b px-4 py-2"
+    >
       <Sidebar.Trigger class="-ms-1" />
       <Separator orientation="vertical" class="me-2 h-4" />
       <Breadcrumb.Root class="min-w-0 flex-1">
@@ -50,7 +52,7 @@
         </Breadcrumb.List>
       </Breadcrumb.Root>
     </header>
-    <div class="flex flex-1 flex-col gap-4 p-4">
+    <div class="flex min-w-0 flex-1 flex-col gap-4 p-4">
       {@render children()}
     </div>
   </Sidebar.Inset>
