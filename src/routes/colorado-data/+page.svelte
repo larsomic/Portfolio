@@ -17,6 +17,13 @@
         "Colorado's legal marijuana market since Dec 2014: monthly sales by county, the rise of retail over medical, and an animated race up the county leaderboard.",
       dataset: "Colorado Dept. of Revenue — j7a3-jgd3",
     },
+    {
+      title: "Crime in Colorado",
+      slug: "/colorado-data/crime",
+      description:
+        "Every NIBRS incident reported by Colorado law enforcement, 2016–2024 — trends by agency and offense, plus weekday, seasonal, and hour-of-day patterns.",
+      dataset: "Colorado Bureau of Investigation — j6g4-gayk",
+    },
   ];
 </script>
 
