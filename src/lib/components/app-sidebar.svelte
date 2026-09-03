@@ -24,14 +24,6 @@
 
   const sidebar = useSidebar();
 
-  function handleNameClick() {
-    if (sidebar.isMobile) {
-      sidebar.setOpenMobile(false);
-    } else {
-      sidebar.setOpen(false);
-    }
-  }
-
   function handleClick(e: MouseEvent, link: NavLink) {
     if (link.isExternal) {
       e.preventDefault();
@@ -48,11 +40,17 @@
   <Sidebar.Header>
     <Sidebar.Menu>
       <Sidebar.MenuItem>
-        <Sidebar.MenuButton
-          class="data-[slot=sidebar-menu-button]:!p-1.5"
-          onclick={handleNameClick}
-        >
-          <span class="text-base font-semibold">Michael Larson</span>
+        <Sidebar.MenuButton class="data-[slot=sidebar-menu-button]:!p-1.5">
+          {#snippet child({ props })}
+            <a
+              href="/"
+              {...props}
+              onclick={() => {
+                if (sidebar.isMobile) sidebar.setOpenMobile(false);
+              }}>
+              <span class="text-base font-semibold">Michael Larson</span>
+            </a>
+          {/snippet}
         </Sidebar.MenuButton>
       </Sidebar.MenuItem>
     </Sidebar.Menu>
