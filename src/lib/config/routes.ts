@@ -61,6 +61,7 @@ export const ROUTES: NavGroup[] = [
               { title: "Denver Accidents", slug: "denver-accidents" },
               { title: "Cannabis Economy", slug: "colorado-data/cannabis-economy" },
               { title: "Crime in Colorado", slug: "colorado-data/crime" },
+              { title: "Bike & Ped Counts", slug: "colorado-data/bike-counts" },
             ],
           },
         ],

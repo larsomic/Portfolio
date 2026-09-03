@@ -24,6 +24,13 @@
         "Every NIBRS incident reported by Colorado law enforcement, 2016–2024 — trends by agency and offense, plus weekday, seasonal, and hour-of-day patterns.",
       dataset: "Colorado Bureau of Investigation — j6g4-gayk",
     },
+    {
+      title: "Bike & Ped Counts",
+      slug: "/colorado-data/bike-counts",
+      description:
+        "Where Coloradans work out: every bicycle and pedestrian CDOT counted, 2009–2015, sized by volume on a statewide map.",
+      dataset: "CDOT — q2qp-xhnj",
+    },
   ];
 </script>
 
