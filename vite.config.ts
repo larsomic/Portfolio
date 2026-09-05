@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-netlify';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
@@ -13,10 +13,11 @@ export default defineConfig({
 				runes: ({ filename }) => filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// Deploy to Vercel with serverless functions; static pages are prerendered.
-			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+			// Deploy to Netlify with Node-based Netlify Functions; static pages are prerendered.
+			// `split: false` bundles all SSR routes into a single `render` function.
+			// See https://docs.netlify.com/build/frameworks/framework-setup-guides/sveltekit/
 			adapter: adapter({
-				runtime: 'nodejs22.x',
+				edge: false,
 				split: false
 			})
 		})

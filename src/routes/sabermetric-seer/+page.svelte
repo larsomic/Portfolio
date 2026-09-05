@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
   import {
     IconArrowsSort,
     IconBallBaseball,
@@ -18,8 +17,9 @@
   import * as Tabs from "$lib/components/ui/tabs/index.js";
   import * as Table from "$lib/components/ui/table/index.js";
   import * as Accordion from "$lib/components/ui/accordion/index.js";
-  import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import PlayerDialog from "$lib/components/player-dialog.svelte";
+  import { invalidateAll } from "$app/navigation";
+  import type { PageData } from "./$types.js";
 
   interface SpotlightRow {
     id: string;
@@ -30,19 +30,7 @@
     value: string;
   }
 
-  interface LeagueLeadersResponse {
-    leagueLeaders?: Array<{
-      leaders?: Array<{
-        rank: number;
-        value: string;
-        person?: { id: number; fullName: string };
-        team?: { name: string };
-      }>;
-    }>;
-  }
 
-  const season = new Date().getFullYear();
-  const API_BASE = "https://statsapi.mlb.com/api/v1/stats/leaders";
 
   const FEATURES = [
     {
@@ -99,65 +87,22 @@
     },
   ] as const;
 
-  let hitting = $state<SpotlightRow[]>([]);
-  let pitching = $state<SpotlightRow[]>([]);
-  // Start as loading so SSR shows the skeleton until data arrives
-  let loading = $state(true);
-  let errorMessage = $state<string | null>(null);
+  let { data }: { data: PageData } = $props();
 
-  let activeController: AbortController | null = null;
+  const season = $derived(data.season);
+  const hitting = $derived(data.hitting);
+  const pitching = $derived(data.pitching);
 
-  async function fetchSpotlight() {
-    if (!browser) return;
+  let refreshing = $state(false);
 
-    // Cancel any in-flight request so refreshes don't race
-    activeController?.abort();
-    const controller = new AbortController();
-    activeController = controller;
-
-    loading = true;
-    errorMessage = null;
-
-    const urlFor = (category: string, group: "hitting" | "pitching") =>
-      `${API_BASE}?leaderCategories=${category}&season=${season}&statGroup=${group}&limit=5`;
-
+  async function refresh() {
+    refreshing = true;
     try {
-      const [hrRes, eraRes] = await Promise.all([
-        fetch(urlFor("homeRuns", "hitting"), { signal: controller.signal }),
-        fetch(urlFor("earnedRunAverage", "pitching"), {
-          signal: controller.signal,
-        }),
-      ]);
-      if (!hrRes.ok || !eraRes.ok) throw new Error("Request failed");
-
-      const map = async (
-        res: Response,
-        key: string,
-      ): Promise<SpotlightRow[]> => {
-        const json = (await res.json()) as LeagueLeadersResponse;
-        return (json.leagueLeaders?.[0]?.leaders ?? []).map((l, index) => ({
-          id: `${key}-${index}`,
-          rank: l.rank,
-          personId: l.person?.id ?? 0,
-          player: l.person?.fullName ?? "Unknown",
-          team: l.team?.name ?? "—",
-          value: l.value,
-        }));
-      };
-
-      hitting = await map(hrRes, "hr");
-      pitching = await map(eraRes, "era");
-      loading = false;
-    } catch (err) {
-      if ((err as Error).name === "AbortError") return;
-      errorMessage = "Couldn't reach the MLB Stats API just now. Try again.";
-      loading = false;
+      await invalidateAll();
+    } finally {
+      refreshing = false;
     }
   }
-
-  $effect(() => {
-    if (browser) fetchSpotlight();
-  });
 </script>
 
 <svelte:head>
@@ -242,8 +187,8 @@
       <Button
         variant="ghost"
         size="sm"
-        onclick={fetchSpotlight}
-        disabled={loading}
+        onclick={refresh}
+        disabled={refreshing}
       >
         Refresh
       </Button>
@@ -261,22 +206,9 @@
           </Tabs.List>
         </Card.Header>
 
-        {#if loading}
-          <Card.Content class="space-y-2">
-            {#each [1, 2, 3, 4, 5] as row (row)}
-              <Skeleton class="h-10 w-full" />
-            {/each}
-          </Card.Content>
-        {:else if errorMessage}
-          <Card.Content>
-            <div
-              class="bg-destructive/10 text-destructive rounded-md border p-4 text-sm"
-            >
-              {errorMessage}
-            </div>
-          </Card.Content>
-        {:else}
-          {#snippet spotlight(rows: SpotlightRow[])}
+        <!-- Plain wrapper so the snippet is not passed as a prop to Tabs.Root -->
+        <div class="contents">
+        {#snippet spotlight(rows: SpotlightRow[])}
             <Card.Content class="p-0">
               <Table.Root>
                 <Table.Header>
@@ -312,13 +244,13 @@
             </Card.Content>
           {/snippet}
 
-          <Tabs.Content value="hitting">
-            {@render spotlight(hitting)}
-          </Tabs.Content>
-          <Tabs.Content value="pitching">
-            {@render spotlight(pitching)}
-          </Tabs.Content>
-        {/if}
+        <Tabs.Content value="hitting">
+          {@render spotlight(hitting)}
+        </Tabs.Content>
+        <Tabs.Content value="pitching">
+          {@render spotlight(pitching)}
+        </Tabs.Content>
+        </div>
       </Tabs.Root>
     </Card.Root>
   </section>

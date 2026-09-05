@@ -30,6 +30,13 @@ export const PROJECTS: Project[] = [
     tags: ["sports", "ncaa"],
   },
   {
+    title: "Colorado Data",
+    slug: "/colorado-data",
+    description:
+      "Denver accident maps and the rise of legal weed, straight from Colorado open data.",
+    tags: ["data", "colorado"],
+  },
+  {
     title: "Portfolio P&L",
     slug: "#",
     description:

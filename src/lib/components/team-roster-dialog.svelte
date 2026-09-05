@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
   import { IconChevronDown, IconUsersGroup } from "@tabler/icons-svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
@@ -12,7 +11,6 @@
     parseSeasonRoster,
     rostersUrl,
     type LeagueMember,
-    type PlayerMap,
     type SeasonEntry,
     type SeasonRoster,
     type SleeperRoster,
@@ -30,11 +28,16 @@
   let open = $state(false);
   let loading = $state(false);
   let errorMessage = $state<string | null>(null);
-  let avatarSrc = $state<string | null>(member.avatarUrl);
+  // Reactive so a new member (or a retried image) resets the fallback cleanly.
+  let avatarFailed = $state(false);
+  const avatarSrc = $derived(avatarFailed ? null : member.avatarUrl);
 
   // season -> fetched roster for this member, so re-picking a season is instant.
   const cache = new Map<string, SeasonRoster | null>();
-  let selected = $state<SeasonEntry>(seasons[0]);
+  // Defaults to the most recent season; overridden once a roster is found or
+  // the user picks a season. Reactive so a changed `seasons` prop is picked up.
+  let selectedSeason = $state<SeasonEntry | null>(null);
+  const selected = $derived(selectedSeason ?? seasons[0]);
   let roster = $state<SeasonRoster | null>(null);
 
   function initials(name: string): string {
@@ -68,14 +71,14 @@
     for (const entry of seasons) {
       const found = await fetchFor(entry);
       if (found && found.players.length > 0) {
-        selected = entry;
+        selectedSeason = entry;
         roster = found;
         loading = false;
         return;
       }
     }
     // Nothing found anywhere: show the newest season's (empty) state.
-    selected = seasons[0];
+    selectedSeason = seasons[0] ?? null;
     roster = null;
     if (seasons.length === 0) {
       errorMessage = "Couldn't load league history from Sleeper.";
@@ -93,7 +96,7 @@
     loading = true;
     errorMessage = null;
     const found = await fetchFor(entry);
-    selected = entry;
+    selectedSeason = entry;
     roster = found;
     loading = false;
   }
@@ -129,7 +132,7 @@
             src={avatarSrc}
             alt=""
             class="size-14 rounded-full object-cover"
-            onerror={() => (avatarSrc = null)}
+            onerror={() => (avatarFailed = true)}
           />
         {:else}
           {initials(member.displayName)}

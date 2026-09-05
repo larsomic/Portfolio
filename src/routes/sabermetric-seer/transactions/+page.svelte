@@ -19,27 +19,8 @@
   import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import DataTable from "../../data-table.svelte";
   import { columns, type Transaction } from "./columns.js";
-
-  interface MlbTeamRef {
-    id: number;
-    name?: string;
-    link: string;
-  }
-
-  interface MlbTransactionRaw {
-    id: number;
-    person?: { id: number; fullName: string; link: string };
-    typeCode?: string;
-    typeDesc?: string;
-    fromTeam?: MlbTeamRef;
-    toTeam?: MlbTeamRef;
-    date?: string;
-    description?: string;
-  }
-
-  interface MlbTransactionsResponse {
-    transactions: MlbTransactionRaw[];
-  }
+  import { mapTransactions, type MlbTransactionsResponse } from "./mappers.js";
+  import type { PageData } from "./$types.js";
 
   const API_BASE = "https://statsapi.mlb.com/api/v1/transactions";
 
@@ -47,15 +28,27 @@
 
   const maxDate = today(getLocalTimeZone());
 
-  let open = $state(false);
-  let selectedDate = $state<CalendarDateType>(maxDate);
+  let { data }: { data: PageData } = $props();
 
-  let transactions = $state<Transaction[]>([]);
-  // Start as loading so SSR shows the skeleton until data arrives
-  let loading = $state(true);
+  let open = $state(false);
+  // Start on the day the server fetched, so no refetch is needed on mount.
+  // Intentional one-time initialization from `data`: once the user picks a
+  // different date, this state owns the selection until reload.
+  // svelte-ignore state_referenced_locally
+  const [y, m, d] = data.date.split("-").map(Number);
+  let selectedDate = $state<CalendarDateType>(new CalendarDate(y, m, d));
+
+  // The initial day is fetched server-side in +page.ts; the date picker
+  // refetches client-side for any other day. These are intentionally seeded
+  // from `data` and then owned by client fetches.
+  // svelte-ignore state_referenced_locally
+  let transactions = $state<Transaction[]>(data.transactions);
+  let loading = $state(false);
   let errorMessage = $state<string | null>(null);
 
   let activeController: AbortController | null = null;
+  // svelte-ignore state_referenced_locally
+  let lastFetched = $state(data.date);
 
   function fetchTransactions() {
     if (!browser || !selectedDate) return;
@@ -75,24 +68,9 @@
         if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
         return res.json() as Promise<MlbTransactionsResponse>;
       })
-      .then((data) => {
-        const seen: Record<number, true> = {};
-        transactions = (data.transactions ?? [])
-          .filter((t) => {
-            if (seen[t.id]) return false;
-            seen[t.id] = true;
-            return true;
-          })
-          .map((t) => ({
-            id: t.id,
-            personId: t.person?.id ?? null,
-            player: t.person?.fullName ?? "Unknown",
-            type: t.typeDesc ?? t.typeCode ?? "—",
-            fromTeam: t.fromTeam?.name ?? null,
-            toTeam: t.toTeam?.name ?? null,
-            date: t.date ?? dateParam,
-            description: t.description ?? "",
-          }));
+      .then((payload) => {
+        transactions = mapTransactions(payload, dateParam);
+        lastFetched = dateParam;
         loading = false;
       })
       .catch((err) => {
@@ -102,10 +80,12 @@
       });
   }
 
-  // Fetch whenever the selected date changes (and once on mount in the browser)
+  // Refetch when the picked date differs from what the server provided.
   $effect(() => {
     void selectedDate;
-    if (browser) fetchTransactions();
+    if (!browser) return;
+    if (selectedDate.toString() === lastFetched) return;
+    fetchTransactions();
   });
 
   function previousDay() {

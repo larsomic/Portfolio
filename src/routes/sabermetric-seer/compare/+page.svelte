@@ -344,9 +344,6 @@
     params.set("chart", chartModeActive);
     params.set("axis", axisActive);
     if (careerYears) params.set("years", String(careerYears));
-    // Kit 2 only exposes `resolve` on the server, so the lint rule's usual
-    // fix is not available for this client-side navigation.
-    // eslint-disable-next-line svelte/no-navigation-without-resolve
     await goto(`${page.url.pathname}?${params.toString()}`, {
       replaceState: true,
       noScroll: true,

@@ -1,56 +1,45 @@
 <script lang="ts">
   import { SvelteDate } from "svelte/reactivity";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
   import { IconChevronLeft, IconChevronRight } from "@tabler/icons-svelte";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import AccidentMap from "$lib/components/traffic/accident-map.svelte";
   import { cn } from "$lib/utils.js";
-  import {
-    fetchAccidentsForDay,
-    fmtTime,
-    summarize,
-    todayStr,
-    type Accident,
-  } from "$lib/denver-traffic.js";
+  import { fmtTime, summarize, todayStr } from "$lib/denver-traffic.js";
+  import type { PageData } from "./$types.js";
 
-  let date = $state(todayStr(-1)); // yesterday — reporting lags a day
-  let accidents = $state<Accident[]>([]);
-  let loading = $state(false);
-  let error = $state<string | null>(null);
+  // The day's accidents are fetched server-side in +page.ts; the day picker
+  // is a URL param so every day deep-links and back/forward work.
+  let { data }: { data: PageData } = $props();
+  const date = $derived(data.date);
+  const accidents = $derived(data.accidents);
+
   let selectedId = $state<string | null>(null);
 
+  // Clear the selected accident whenever the day changes.
+  $effect(() => {
+    void data.date;
+    selectedId = null;
+  });
+
   const summary = $derived(summarize(accidents));
+
+  function selectDate(value: string) {
+    if (!value || value === date) return;
+    void goto(`${page.url.pathname}?date=${value}`, { noScroll: true });
+  }
 
   function shiftDay(days: number) {
     const d = new SvelteDate(`${date}T12:00:00`);
     d.setDate(d.getDate() + days);
     const pad = (n: number) => String(n).padStart(2, "0");
-    date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const next = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    if (next === date || next > todayStr()) return;
+    void goto(`${page.url.pathname}?date=${next}`, { noScroll: true });
   }
-
-  $effect(() => {
-    void date;
-    let aborted = false;
-    (async () => {
-      loading = true;
-      error = null;
-      selectedId = null;
-      try {
-        const rows = await fetchAccidentsForDay(date);
-        if (!aborted) accidents = rows;
-      } catch (e) {
-        if (!aborted)
-          error = e instanceof Error ? e.message : "Failed to load data";
-      } finally {
-        if (!aborted) loading = false;
-      }
-    })();
-    return () => {
-      aborted = true;
-    };
-  });
 
   function select(id: string) {
     selectedId = id;
@@ -84,51 +73,24 @@
         <input
           type="date"
           class="border-input bg-background focus-visible:ring-ring/50 h-10 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
-          value={date}
+          value={date ?? ""}
           max={todayStr()}
-          onchange={(e) => {
-            date = (e.currentTarget as HTMLInputElement).value;
-          }} />
+          onchange={(e) => selectDate((e.currentTarget as HTMLInputElement).value)} />
         <Button
           variant="outline"
           size="icon"
           aria-label="Next day"
-          disabled={date >= todayStr()}
+          disabled={!date || date >= todayStr()}
           onclick={() => shiftDay(1)}>
           <IconChevronRight />
         </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        class="text-muted-foreground"
-        onclick={() => (date = todayStr(-1))}>
-        Yesterday
-      </Button>
-      {#if loading}
-        <span class="text-muted-foreground animate-pulse text-sm">Loading…</span>
-      {:else if !error}
-        <span class="text-muted-foreground text-sm">
-          {accidents.length} accident{accidents.length === 1 ? "" : "s"} reported
-        </span>
-      {/if}
+      <span class="text-muted-foreground text-sm">
+        {accidents.length} accident{accidents.length === 1 ? "" : "s"} reported
+      </span>
     </Card.Content>
   </Card.Root>
 
-  {#if error}
-    <Card.Root class="border-destructive">
-      <Card.Content>
-        <p class="text-destructive text-sm">{error}</p>
-      </Card.Content>
-    </Card.Root>
-  {:else if loading}
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {#each [0, 1, 2, 3] as i (i)}
-        <Skeleton class="h-24 w-full rounded-lg" />
-      {/each}
-    </div>
-    <Skeleton class="h-[480px] w-full rounded-lg" />
-  {:else}
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Card.Root>
         <Card.Content class="py-3">
@@ -216,5 +178,4 @@
         </div>
       </Card.Root>
     </div>
-  {/if}
 </div>
