@@ -31,6 +31,7 @@
     type ScheduleGame,
   } from "$lib/mlb-games.js";
   import GameDetail from "./game-detail.svelte";
+  import type { PageData } from "./$types.js";
 
   const id = $props.id();
 
@@ -39,13 +40,21 @@
   let open = $state(false);
   let selectedDate = $state<CalendarDateType>(maxDate);
 
-  let games = $state<ScheduleGame[]>([]);
-  let loading = $state(true);
+  let { data }: { data: PageData } = $props();
+
+  // Today's board is fetched server-side in +page.ts; the date picker and
+  // live polling refetch client-side. Intentionally seeded from `data`.
+  // svelte-ignore state_referenced_locally
+  let games = $state<ScheduleGame[]>(data.games);
+  let loading = $state(false);
   let errorMessage = $state<string | null>(null);
   let expandedPk = $state<number | null>(null);
-  let autoRefreshOn = $state(false);
+  // svelte-ignore state_referenced_locally
+  let autoRefreshOn = $state(data.games.some(isLive));
 
   let activeController: AbortController | null = null;
+  // svelte-ignore state_referenced_locally
+  let lastFetched = $state(data.date);
   let pollTimer: ReturnType<typeof setInterval> | null = null;
 
   function fetchGames() {
@@ -56,9 +65,11 @@
     loading = true;
     errorMessage = null;
 
-    fetchSchedule(selectedDate.toString(), controller.signal)
+    const dateParam = selectedDate.toString();
+    fetchSchedule(dateParam, controller.signal)
       .then((list) => {
         games = list;
+        lastFetched = dateParam;
         autoRefreshOn = list.some(isLive);
       })
       .catch((err) => {
@@ -70,9 +81,12 @@
       });
   }
 
+  // Refetch when the picked date differs from what the server provided.
   $effect(() => {
     void selectedDate;
-    if (browser) fetchGames();
+    if (!browser) return;
+    if (selectedDate.toString() === lastFetched) return;
+    fetchGames();
   });
 
   // While any game on this date is live, keep the board fresh every minute.

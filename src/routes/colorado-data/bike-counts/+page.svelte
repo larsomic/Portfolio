@@ -1,19 +1,11 @@
 <script lang="ts">
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import TrendChart, { type TrendSeries } from "$lib/components/pulse/trend-chart.svelte";
   import StationMap from "$lib/components/traffic/station-map.svelte";
-  import {
-    fetchStations,
-    fetchStationMonths,
-    fetchYearsCovered,
-    modeLabel,
-    fmtInt,
-    type BikeStation,
-    type StationMonth,
-  } from "$lib/colorado-bikes.js";
+  import { modeLabel, fmtInt } from "$lib/colorado-bikes.js";
   import { cn } from "$lib/utils.js";
+  import type { PageData } from "./$types.js";
 
   type ModeFilter = "all" | "bike" | "ped";
 
@@ -23,39 +15,14 @@
     ["ped", "Pedestrians"],
   ];
 
-  let stations = $state<BikeStation[]>([]);
-  let stationMonths = $state<StationMonth[]>([]);
-  let years = $state<number[]>([]);
-  let loading = $state(true);
-  let error = $state<string | null>(null);
+  // Datasets are fetched server-side in +page.ts and cached for an hour.
+  let { data }: { data: PageData } = $props();
+  const stations = $derived(data.stations);
+  const stationMonths = $derived(data.stationMonths);
+  const years = $derived(data.years);
 
   let modeFilter = $state<ModeFilter>("all");
   let selectedId = $state<string | null>(null);
-
-  $effect(() => {
-    let aborted = false;
-    (async () => {
-      try {
-        const [s, sm, ys] = await Promise.all([
-          fetchStations(),
-          fetchStationMonths(),
-          fetchYearsCovered(),
-        ]);
-        if (aborted) return;
-        stations = s;
-        stationMonths = sm;
-        years = ys;
-      } catch (e) {
-        if (!aborted)
-          error = e instanceof Error ? e.message : "Failed to load data";
-      } finally {
-        if (!aborted) loading = false;
-      }
-    })();
-    return () => {
-      aborted = true;
-    };
-  });
 
   const filtered = $derived(
     stations.filter((s) =>
@@ -176,20 +143,6 @@
     </div>
   </div>
 
-  {#if error}
-    <Card.Root class="border-destructive">
-      <Card.Content>
-        <p class="text-destructive text-sm">{error}</p>
-      </Card.Content>
-    </Card.Root>
-  {:else if loading}
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {#each [0, 1, 2, 3] as i (i)}
-        <Skeleton class="h-24 w-full rounded-lg" />
-      {/each}
-    </div>
-    <Skeleton class="h-[540px] w-full rounded-lg" />
-  {:else}
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Card.Root>
         <Card.Content class="py-3">
@@ -309,5 +262,4 @@
         culture already put people on bikes and foot.
       </p>
     {/if}
-  {/if}
 </div>

@@ -25,7 +25,6 @@
     rostersUrl,
     usersForLeagueUrl,
     type NflState,
-    type PlayerMap,
     type RawLeagueUser,
     type SeasonEntry,
     type SleeperMatchup,

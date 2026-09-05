@@ -6,15 +6,14 @@
   } from "@tabler/icons-svelte";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import TrendChart, { type TrendSeries } from "$lib/components/pulse/trend-chart.svelte";
   import {
-    fetchCannabisSales,
     fmtMoney,
     fmtMonth,
     type CountyMonthSales,
   } from "$lib/colorado-cannabis.js";
   import { cn } from "$lib/utils.js";
+  import type { PageData } from "./$types.js";
 
   const COLOR_RETAIL = "#10b981"; // emerald
   const COLOR_MEDICAL = "#8b5cf6"; // violet
@@ -23,9 +22,9 @@
 
   type Mode = "retail" | "medical" | "combined";
 
-  let rows = $state<CountyMonthSales[]>([]);
-  let loading = $state(true);
-  let error = $state<string | null>(null);
+  // The dataset is fetched server-side in +page.ts (cached for an hour).
+  let { data }: { data: PageData } = $props();
+  const rows = $derived(data.rows);
 
   let mode = $state<Mode>("retail");
   let cumulative = $state(true);
@@ -33,24 +32,8 @@
   let playing = $state(false);
   let timer: ReturnType<typeof setInterval> | null = null;
 
-  $effect(() => {
-    let aborted = false;
-    (async () => {
-      try {
-        const data = await fetchCannabisSales();
-        if (!aborted) rows = data;
-      } catch (e) {
-        if (!aborted)
-          error = e instanceof Error ? e.message : "Failed to load data";
-      } finally {
-        if (!aborted) loading = false;
-      }
-    })();
-    return () => {
-      aborted = true;
-      stop();
-    };
-  });
+  // Stop the animation clock when the page is destroyed.
+  $effect(() => () => stop());
 
   const stateRows = $derived(rows.filter((r) => r.county === "Total"));
   const countyRows = $derived(rows.filter((r) => r.county !== "Total"));
@@ -159,7 +142,8 @@
   }
 
   function toggle() {
-    playing ? stop() : start();
+    if (playing) stop();
+    else start();
   }
 
   // ---- annual aggregates for charts ---------------------------------------
@@ -279,24 +263,6 @@
     </p>
   </div>
 
-  {#if error}
-    <Card.Root class="border-destructive">
-      <Card.Content>
-        <p class="text-destructive text-sm">{error}</p>
-      </Card.Content>
-    </Card.Root>
-  {:else if loading}
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {#each [0, 1, 2, 3] as i (i)}
-        <Skeleton class="h-24 w-full rounded-lg" />
-      {/each}
-    </div>
-    <Skeleton class="h-[520px] w-full rounded-lg" />
-    <div class="grid gap-4 md:grid-cols-2">
-      <Skeleton class="h-80 w-full rounded-lg" />
-      <Skeleton class="h-80 w-full rounded-lg" />
-    </div>
-  {:else}
     <!-- Headline stats -->
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Card.Root>
@@ -496,5 +462,4 @@
       amounts; counties with zero reported sales in a month are omitted from
       that month upstream.
     </p>
-  {/if}
 </div>

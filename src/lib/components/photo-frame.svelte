@@ -31,7 +31,6 @@
       {/if}
     </div>
   {:else}
-    <!-- svelte-ignore a11y_img_redundant_alt -->
     <img
       {src}
       {alt}

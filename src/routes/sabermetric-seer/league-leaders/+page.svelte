@@ -6,6 +6,8 @@
   import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import DataTable from "../../data-table.svelte";
   import { columns, type Leader } from "./columns.js";
+  import { mapLeaders } from "./mappers.js";
+  import type { PageData } from "./$types.js";
 
   type StatGroup = "hitting" | "pitching";
 
@@ -51,12 +53,19 @@
   let leadersOpen = $state(false);
   let seasonOpen = $state(false);
 
-  let leaders = $state<Leader[]>([]);
-  // Start as loading so SSR shows the skeleton until data arrives
-  let loading = $state(true);
+  let { data }: { data: PageData } = $props();
+
+  // The default board is fetched server-side in +page.ts; the category and
+  // season selectors refetch client-side. Intentionally seeded from `data`.
+  // svelte-ignore state_referenced_locally
+  let leaders = $state<Leader[]>(data.leaders);
+  let loading = $state(false);
   let errorMessage = $state<string | null>(null);
 
   let activeController: AbortController | null = null;
+  // Identity of the board currently held: `${category}:${season}`.
+  // svelte-ignore state_referenced_locally
+  let lastKey = $state(`${data.category}:${data.season}`);
 
   function fetchLeaders() {
     if (!browser) return;
@@ -90,22 +99,9 @@
           }>;
         }>;
       })
-      .then((data) => {
-        const allLeaders = (data.leagueLeaders ?? [])
-          .filter(
-            (entry) =>
-              !entry.statGroup || entry.statGroup === category.group,
-          )
-          .flatMap((entry) => entry.leaders ?? []);
-        leaders = allLeaders.map((l) => ({
-          rank: l.rank,
-          personId: l.person?.id ?? 0,
-          player: l.person?.fullName ?? "Unknown",
-          team: l.team?.name ?? "—",
-          league: l.league?.name ?? "—",
-          value: l.value,
-          valueNum: Number.parseFloat(l.value) || 0,
-        }));
+      .then((payload) => {
+        leaders = mapLeaders(payload.leagueLeaders, category.group);
+        lastKey = `${category.id}:${season}`;
         loading = false;
       })
       .catch((err) => {
@@ -115,11 +111,13 @@
       });
   }
 
-  // Refetch whenever category or season changes
+  // Refetch when the selection differs from what the server provided.
   $effect(() => {
     void category.id;
     void season;
-    if (browser) fetchLeaders();
+    if (!browser) return;
+    if (`${category.id}:${season}` === lastKey) return;
+    fetchLeaders();
   });
 
   function selectGroup(next: StatGroup) {

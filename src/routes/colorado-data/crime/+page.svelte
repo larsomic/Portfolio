@@ -1,18 +1,11 @@
 <script lang="ts">
   import * as Card from "$lib/components/ui/card/index.js";
-  import { Skeleton } from "$lib/components/ui/skeleton/index.js";
   import TrendChart, { type TrendSeries } from "$lib/components/pulse/trend-chart.svelte";
   import RankedList from "$lib/components/pulse/ranked-list.svelte";
-  import {
-    fetchAgencies,
-    fetchCategoryTotals,
-    fetchDailyCounts,
-    fetchHourlyCounts,
-    fetchYearCategories,
-    fmtInt,
-    fmtCompact,
-    YEARS,
-  } from "$lib/colorado-crime.js";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
+  import { fmtInt, fmtCompact, YEARS } from "$lib/colorado-crime.js";
+  import type { PageData } from "./$types.js";
 
   const PALETTE = [
     "#ef4444",
@@ -24,64 +17,23 @@
   ];
   const OTHER_COLOR = "#94a3b8";
 
-  let agencies = $state<string[]>([]);
-  let agency = $state("Denver");
-  let loading = $state(true);
-  let error = $state<string | null>(null);
+  // Everything is fetched server-side in +page.ts; the agency picker is a
+  // URL param so switching agencies re-runs load (and deep-links work).
+  let { data }: { data: PageData } = $props();
+  const agencies = $derived(data.agencies);
+  const agency = $derived(data.agency);
+  const totals = $derived(data.totals);
+  const yearCats = $derived(data.yearCats);
+  const daily = $derived(data.daily);
+  const hourly = $derived(data.hourly);
 
-  let totals = $state<{ cat: string; n: number }[]>([]);
-  let yearCats = $state<{ year: number; cat: string; n: number }[]>([]);
-  let daily = $state<{ dateMs: number; n: number }[]>([]);
-  let hourly = $state<{ hour: number; n: number }[]>([]);
-
-  $effect(() => {
-    let aborted = false;
-    fetchAgencies()
-      .then((rows) => {
-        if (!aborted) agencies = rows.map((r) => r.name);
-      })
-      .catch(() => {});
-    return () => {
-      aborted = true;
-    };
-  });
-
-  $effect(() => {
-    const a = agency || null; // "" means statewide
-    let aborted = false;
-    (async () => {
-      loading = true;
-      error = null;
-      try {
-        const [t, yc, d, h] = await Promise.all([
-          fetchCategoryTotals(a),
-          Promise.all(
-            YEARS.map(async (y) => ({
-              year: y,
-              cats: await fetchYearCategories(a, y),
-            })),
-          ),
-          fetchDailyCounts(a),
-          fetchHourlyCounts(a),
-        ]);
-        if (aborted) return;
-        totals = t;
-        yearCats = yc.flatMap((y) =>
-          y.cats.map((c) => ({ year: y.year, cat: c.cat, n: c.n })),
-        );
-        daily = d;
-        hourly = h;
-      } catch (e) {
-        if (!aborted)
-          error = e instanceof Error ? e.message : "Failed to load data";
-      } finally {
-        if (!aborted) loading = false;
-      }
-    })();
-    return () => {
-      aborted = true;
-    };
-  });
+  function selectAgency(value: string) {
+    if (value === agency) return;
+    void goto(
+      `${page.url.pathname}?agency=${encodeURIComponent(value)}`,
+      { noScroll: true },
+    );
+  }
 
   // ---- derived views -------------------------------------------------------
 
@@ -119,10 +71,6 @@
   });
 
   const DOW_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const MONTH_LABELS = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-  ];
 
   const dowBars = $derived.by(() => {
     const sums = new Array(7).fill(0);
@@ -206,7 +154,7 @@
       <select
         class="border-input bg-background focus-visible:ring-ring/50 h-10 w-64 rounded-md border px-3 text-sm outline-none focus-visible:ring-2"
         value={agency}
-        onchange={(e) => (agency = (e.currentTarget as HTMLSelectElement).value)}>
+        onchange={(e) => selectAgency((e.currentTarget as HTMLSelectElement).value)}>
         <option value="">Statewide (all agencies)</option>
         {#each agencies as name (name)}
           <option value={name}>{name}</option>
@@ -215,24 +163,6 @@
     </label>
   </div>
 
-  {#if error}
-    <Card.Root class="border-destructive">
-      <Card.Content>
-        <p class="text-destructive text-sm">{error}</p>
-      </Card.Content>
-    </Card.Root>
-  {:else if loading}
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {#each [0, 1, 2, 3] as i (i)}
-        <Skeleton class="h-24 w-full rounded-lg" />
-      {/each}
-    </div>
-    <Skeleton class="h-[380px] w-full rounded-lg" />
-    <div class="grid gap-4 lg:grid-cols-2">
-      <Skeleton class="h-72 w-full rounded-lg" />
-      <Skeleton class="h-72 w-full rounded-lg" />
-    </div>
-  {:else}
     <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Card.Root>
         <Card.Content class="py-3">
@@ -374,5 +304,4 @@
       participating agencies; coverage varies by year. No locations are
       published, hence no map — that's what the accidents page is for.
     </p>
-  {/if}
 </div>
