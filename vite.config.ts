@@ -13,7 +13,7 @@ export default defineConfig({
 				runes: ({ filename }) => filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// Deploy to Netlify with Node-based Netlify Functions; static pages are prerendered.
+			// Deploy to Netlify with Node-based Netlify Functions; every route renders on demand.
 			// `split: false` bundles all SSR routes into a single `render` function.
 			// See https://docs.netlify.com/build/frameworks/framework-setup-guides/sveltekit/
 			adapter: adapter({

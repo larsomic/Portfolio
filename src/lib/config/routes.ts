@@ -38,7 +38,7 @@ export const ROUTES: NavGroup[] = [
             title: "Fantasy Football",
             slug: "fantasy-football",
             items: [
-              { title: "League Members", slug: "fantasy-football" },
+              { title: "League Members", slug: "fantasy-football/league" },
               {
                 title: "Weekly Scores",
                 slug: "fantasy-football/weekly-scores",
@@ -48,6 +48,10 @@ export const ROUTES: NavGroup[] = [
           {
             title: "March Madness",
             slug: "march-madness",
+            items: [
+              { title: "Tournament History", slug: "march-madness/tournament" },
+              { title: "Cinderella Tracker", slug: "march-madness/cinderella" },
+            ],
           },
           {
             title: "US Population Comparer",

@@ -244,7 +244,7 @@
       <Button
         variant="secondary"
         size="sm"
-        href="/fantasy-football"
+        href="/fantasy-football/league"
       >
         League Members
       </Button>
