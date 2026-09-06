@@ -84,5 +84,6 @@ Deploys to Netlify via `@sveltejs/adapter-netlify`. Pages render on demand throu
 
 ## Contact
 
+- Résumé: [mike-larson.me/resume](https://mike-larson.me/resume) · [PDF](https://mike-larson.me/Michael-Larson-Resume.pdf)
 - GitHub: [@larsomic](https://github.com/larsomic)
 - LinkedIn: [/in/larson2](https://www.linkedin.com/in/larson2/)

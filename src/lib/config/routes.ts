@@ -84,6 +84,10 @@ export const ROUTES: NavGroup[] = [
             isExternal: true
           },
           {
+            title: "Résumé",
+            slug: "resume",
+          },
+          {
             title: "Contact Me!",
             slug: "contact-me",
           },
