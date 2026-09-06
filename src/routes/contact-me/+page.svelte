@@ -4,6 +4,7 @@
     IconBrandGithub,
     IconBrandLinkedin,
     IconCheck,
+    IconFileDownload,
     IconMail,
     IconSend2,
   } from "@tabler/icons-svelte";
@@ -28,6 +29,12 @@
       label: "LinkedIn",
       handle: "Michael Larson",
       href: "https://www.linkedin.com/in/larson2/",
+    },
+    {
+      icon: IconFileDownload,
+      label: "Résumé (PDF)",
+      handle: "Michael-Larson-Resume.pdf",
+      href: "/Michael-Larson-Resume.pdf",
     },
   ];
 
