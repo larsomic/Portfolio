@@ -1,5 +1,11 @@
 <script lang="ts">
-  // The Rockies — Denver's front range: jagged snow-capped peaks and pines.
+  const bigScallops = Array.from({ length: 20 }, () => 'a30,20 0 0 1 60,0').join(' ');
+  const smallScallops = Array.from({ length: 31 }, () => 'a20,14 0 0 1 40,0').join(' ');
+
+  // Denver, postcard-style: the city rising out of a green tree canopy,
+  // then three hazed blue ridges
+  // stacking up into a bright cirrus-streaked sky. Sharp geometry = city,
+  // soft geometry = mountains. No snow — this is the front range in summer.
 </script>
 
 <svg
@@ -10,65 +16,110 @@
 >
   <defs>
     <linearGradient id="sky-denver" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#4a90d1" />
-      <stop offset="1" stop-color="#cfe6f8" />
+      <stop offset="0" stop-color="#5ea6e0" />
+      <stop offset="0.55" stop-color="#8cc3ea" />
+      <stop offset="1" stop-color="#c8e1f4" />
     </linearGradient>
   </defs>
   <rect width="1200" height="540" fill="url(#sky-denver)" />
-  <!-- birds -->
-  <g stroke="#5b7893" stroke-width="2" fill="none" opacity="0.6">
-    <path d="M240,110 q8,-8 16,0 q8,-8 16,0" />
-    <path d="M330,150 q6,-6 12,0 q6,-6 12,0" />
+
+  <!-- thin cirrus wisps, plus a denser pale band hugging the summit line -->
+  <g fill="#eaf4fb">
+    <ellipse cx="300" cy="58" rx="140" ry="7" opacity="0.35" />
+    <ellipse cx="228" cy="92" rx="90" ry="5" opacity="0.28" />
+    <ellipse cx="720" cy="48" rx="160" ry="8" opacity="0.4" />
+    <ellipse cx="905" cy="110" rx="110" ry="6" opacity="0.3" />
+    <ellipse cx="520" cy="128" rx="120" ry="5" opacity="0.25" />
+    <ellipse cx="400" cy="178" rx="380" ry="16" fill="#dcebf8" opacity="0.55" />
   </g>
-  <!-- far jagged peaks -->
-  <polygon
-    points="0,430 150,250 260,350 400,190 520,340 650,220 800,370 950,240 1100,360 1200,310 1200,540 0,540"
-    fill="#7d97ad"
+
+  <!-- farthest range: huge periwinkle dome-massif to the left, triangular
+       twin on the right with a saddle between -->
+  <path
+    d="M0,300 L60,262 L140,212 L230,182 L324,169 L420,232 L480,206 L576,196 L660,232 L760,262 L840,292 L936,302 L1056,202 L1150,252 L1200,272 L1200,540 L0,540 Z"
+    fill="#a9bedd"
   />
-  <!-- snow caps -->
-  <g fill="#eef4f8">
-    <polygon points="400,190 372,235 400,226 428,235" />
-    <polygon points="650,220 626,258 650,250 674,258" />
-    <polygon points="950,240 928,275 950,268 972,275" />
+  <g stroke="#98add2" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M324,169 L310,240 M480,206 L470,270 M576,196 L588,270 M1056,202 L1046,270" />
   </g>
-  <!-- mid range -->
-  <polygon
-    points="0,480 180,340 330,440 500,300 680,430 850,330 1050,450 1200,390 1200,540 0,540"
-    fill="#6d7f5b"
+
+  <!-- mid-blue ridge with broad V saddles -->
+  <path
+    d="M0,340 L120,260 L260,320 L380,292 L520,330 L660,272 L800,330 L920,302 L1050,340 L1200,312 L1200,540 L0,540 Z"
+    fill="#7a9bcb"
   />
-  <!-- Denver skyline at the foot of the range -->
-  <g fill="#9aa7b2">
-    <rect x="460" y="455" width="24" height="65" />
-    <rect x="580" y="438" width="26" height="82" />
-    <rect x="740" y="450" width="28" height="70" />
-    <rect x="806" y="468" width="22" height="52" />
-  </g>
-  <!-- Republic Plaza with its pointed crown -->
-  <g fill="#c2ccd6">
-    <rect x="516" y="404" width="34" height="116" />
-    <polygon points="516,404 533,382 550,404" />
-  </g>
-  <!-- the blue-glass triangle building -->
-  <polygon points="640,520 700,520 700,428" fill="#8fb8d8" />
-  <polygon points="640,520 700,428 668,520" fill="#a9cbe4" opacity="0.8" />
-  <!-- evergreen treeline -->
-  <rect x="0" y="500" width="1200" height="40" fill="#243c29" />
-  <g fill="#2d4a33">
-    {#each Array.from({ length: 24 }) as _, j (j)}
-      <polygon points="{j * 52 + 6},510 {j * 52 + 26},440 {j * 52 + 46},510" />
-    {/each}
-  </g>
-  <!-- elk watching the range -->
-  <g fill="#1e3326">
-    <ellipse cx="150" cy="502" rx="38" ry="15" />
-    <path d="M178,494 L196,462 L206,464 L192,496 Z" />
-    <ellipse cx="203" cy="458" rx="9" ry="6" transform="rotate(-20 203 458)" />
-    <g stroke="#1e3326" stroke-width="2.5" fill="none">
-      <path d="M200,452 L192,430 M192,430 L186,426 M192,430 L194,420 M206,452 L214,432 M214,432 L210,424 M214,432 L220,426" />
+
+  <!-- dark dusty-blue ridge: peak just left of center, shoulder rising right -->
+  <path
+    d="M0,380 L120,342 L240,370 L330,344 L420,285 L520,332 L640,360 L760,342 L900,302 L1020,286 L1100,302 L1200,292 L1200,540 L0,540 Z"
+    fill="#4e6ea8"
+  />
+
+  <!-- downtown skyline: rectilinear slabs, light from upper-left -->
+  <g>
+    <rect x="78" y="356" width="28" height="120" fill="#3a4e58" />
+    <rect x="112" y="346" width="26" height="130" fill="#3a4e58" />
+    <!-- signature tower: deep teal glass with a rounded crown -->
+    <path d="M228,476 L228,282 Q228,260 249,260 Q270,260 270,282 L270,476 Z" fill="#26424b" />
+    <rect x="231" y="270" width="5" height="206" fill="#3e5d66" opacity="0.8" />
+    <!-- pale cream slab with vertical pinstripes -->
+    <rect x="318" y="270" width="42" height="206" fill="#e9e7dd" />
+    <rect x="352" y="270" width="8" height="206" fill="#c9cfc8" />
+    <g stroke="#cfd4cd" stroke-width="1.5">
+      <path d="M328,276 L328,470 M338,276 L338,470 M346,276 L346,470" />
     </g>
-    <rect x="122" y="510" width="4" height="30" />
-    <rect x="138" y="510" width="4" height="30" />
-    <rect x="164" y="510" width="4" height="30" />
-    <rect x="176" y="510" width="4" height="30" />
+    <rect x="340" y="332" width="32" height="144" fill="#42585f" />
+    <rect x="390" y="336" width="36" height="140" fill="#5d7f8c" />
+    <rect x="440" y="358" width="26" height="118" fill="#dfe4e2" />
+    <!-- stepped taupe tower -->
+    <rect x="492" y="348" width="36" height="128" fill="#8a8478" />
+    <rect x="498" y="330" width="24" height="18" fill="#8a8478" />
+    <rect x="504" y="316" width="12" height="14" fill="#8a8478" />
+    <!-- white grid-facade tower -->
+    <rect x="564" y="330" width="36" height="146" fill="#dde3e3" />
+    <g stroke="#c2cacb" stroke-width="1.5">
+      <path d="M564,352 L600,352 M564,378 L600,378 M564,404 L600,404 M564,430 L600,430" />
+    </g>
+    <rect x="624" y="350" width="36" height="126" fill="#6b6257" />
+    <!-- teal reflective slab -->
+    <rect x="696" y="317" width="36" height="159" fill="#4f7a82" />
+    <rect x="700" y="322" width="4" height="150" fill="#9fb7bd" opacity="0.7" />
+    <!-- tallest right-side tower with small dark crown box -->
+    <rect x="738" y="286" width="36" height="190" fill="#253c47" />
+    <rect x="748" y="271" width="16" height="15" fill="#1f333c" />
+    <!-- stepped pale towers descending -->
+    <rect x="780" y="330" width="26" height="146" fill="#aebdc4" />
+    <rect x="806" y="346" width="20" height="130" fill="#aebdc4" />
+    <rect x="826" y="362" width="14" height="114" fill="#aebdc4" />
+    <!-- striped pale cluster -->
+    <rect x="876" y="340" width="28" height="136" fill="#c6cfd2" />
+    <rect x="906" y="330" width="30" height="146" fill="#c6cfd2" />
+    <rect x="938" y="350" width="26" height="126" fill="#c6cfd2" />
+    <rect x="966" y="340" width="26" height="136" fill="#c6cfd2" />
+    <g stroke="#8fa0a8" stroke-width="1.5">
+      <path d="M884,346 L884,470 M914,336 L914,470 M924,336 L924,470 M946,356 L946,470 M974,346 L974,470" />
+    </g>
+    <rect x="1010" y="364" width="90" height="112" fill="#3e515b" />
+    <rect x="1130" y="398" width="40" height="78" fill="#8a6a5c" />
+  </g>
+
+  <!-- tree canopy belt the city rises out of: two scalloped rows + crowns -->
+  <path
+    d="M0,540 L0,470 {bigScallops} L1200,540 Z"
+    fill="#24421f"
+  />
+  <path
+    d="M-20,540 L-20,486 {smallScallops} L1220,540 Z"
+    fill="#3c5a2b"
+  />
+  <!-- sunlit crowns catching the light -->
+  <g fill="#6b8440" opacity="0.75">
+    <circle cx="30" cy="452" r="18" />
+    <circle cx="58" cy="462" r="14" />
+    <circle cx="1180" cy="450" r="18" />
+    <circle cx="1150" cy="462" r="13" />
+    <circle cx="330" cy="470" r="11" />
+    <circle cx="640" cy="472" r="10" />
+    <circle cx="870" cy="468" r="12" />
   </g>
 </svg>

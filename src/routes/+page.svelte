@@ -63,6 +63,10 @@
   function sectionLabelClass() {
     return "border-white/25 bg-black/35 text-white backdrop-blur";
   }
+
+  // TEMPORARY: hide all foreground content (text, cards, photos) so only the
+  // scene SVGs are visible while iterating on them. Flip back to `true` to restore.
+  const SHOW_CONTENT = false;
 </script>
 
 <svelte:head>
@@ -79,11 +83,14 @@
       <Scene />
     </div>
   {/each}
-  <!-- Contrast scrim so text stays readable over the illustrations -->
-  <div class="absolute inset-0 bg-linear-to-b from-black/30 via-black/5 to-black/40"></div>
+  <!-- Contrast scrim so text stays readable over the illustrations (also hidden while SHOW_CONTENT is false) -->
+  {#if SHOW_CONTENT}
+    <div class="absolute inset-0 bg-linear-to-b from-black/30 via-black/5 to-black/40"></div>
+  {/if}
 </div>
 
-<div class="-mx-4 flex flex-col">
+<!-- TEMPORARY: `invisible` keeps layout/scroll height so the scene crossfade still works -->
+<div class={cn("-mx-4 flex flex-col", !SHOW_CONTENT && "invisible")}>
   <!-- STOP 1 · PULLMAN — intro + player card -->
   <section
     class="relative flex min-h-screen flex-col justify-center gap-10 px-4 py-24 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-12"
@@ -131,31 +138,52 @@
   <section
     class="relative flex min-h-screen flex-col justify-center gap-6 px-4 py-24 lg:px-12"
   >
-    <Badge variant="outline" class={cn(sectionLabelClass(), "w-fit")}>
-      📍 Puget Sound · Seattle, Washington
-    </Badge>
-    <div>
-      <h2
-        class="drop-shadow-lg font-serif text-3xl font-bold text-white"
+    <!-- Featured waterfront photo with the title overlaid, like a postcard -->
+    <div
+      class="group relative overflow-hidden rounded-2xl border border-white/20 shadow-2xl"
+      style="aspect-ratio: 16 / 9; max-height: 58vh;"
+    >
+      <PhotoFrame
+        src="/images/seattle-waterfront.jpg"
+        alt="The Seattle Great Wheel at Pier 57 with the downtown skyline over Elliott Bay"
+        hint="static/images/seattle-waterfront.jpg"
+        className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+      />
+      <!-- Scrim so the overlaid text stays legible -->
+      <div
+        class="absolute inset-0 bg-linear-to-t from-black/70 via-black/25 to-transparent"
+      ></div>
+      <div
+        class="absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-6 sm:p-10"
       >
-        Off the Field
-      </h2>
-      <p class="drop-shadow-md mt-1 text-sm text-white/85">
-        When the laptop closes, the trails open up — from Palouse coulees to
-        Cascadia.
-      </p>
+        <Badge variant="outline" class={sectionLabelClass()}>
+          📍 Puget Sound · Seattle, Washington
+        </Badge>
+        <h2
+          class="drop-shadow-lg font-serif text-3xl font-bold text-white sm:text-4xl"
+        >
+          Off the Field
+        </h2>
+        <p
+          class="drop-shadow-md max-w-xl text-sm leading-relaxed text-white/85 sm:text-base"
+        >
+          When the laptop closes, the trails open up — from Palouse coulees
+          to Cascadia.
+        </p>
+      </div>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-3">
       {#each PHOTOS as name (name)}
         <div
-          class="overflow-hidden rounded-xl border shadow-lg"
+          class="group relative overflow-hidden rounded-xl border border-white/20 shadow-lg transition-shadow hover:shadow-2xl"
           style="aspect-ratio: 3 / 2;"
         >
           <PhotoFrame
             src={`/images/${name}.jpg`}
             alt="Hiking photo"
             hint={`static/images/${name}.jpg`}
+            className="transition-transform duration-500 ease-out group-hover:scale-[1.06]"
           />
         </div>
       {/each}
