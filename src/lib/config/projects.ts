@@ -26,7 +26,7 @@ export const PROJECTS: Project[] = [
     title: "March Madness",
     slug: "/march-madness",
     description:
-      "NCAA tournament bracket analysis and picks for the craziest month in sports.",
+      "Eighty-plus years of NCAA tournament history and upset math, live from the College Basketball Data API.",
     tags: ["sports", "ncaa"],
   },
   {

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/larsomic/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/larsomic/Portfolio/actions/workflows/ci.yml)
 
-A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 5 (runes)**, **shadcn-svelte**, and **Tailwind CSS v4**. Every project is powered by real public data — MLB and NFL APIs, Colorado open data, and the US Census.
+A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 5 (runes)**, **shadcn-svelte**, and **Tailwind CSS v4**. Every project is powered by real public data — MLB, NFL (Sleeper), and NCAA APIs, Colorado open data, and DataUSA.
 
 > 🔗 **Live site:** <https://mike-larson.me/>
 
@@ -18,7 +18,9 @@ A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 
 | ↳ [Cannabis Economy](https://mike-larson.me/colorado-data/cannabis-economy) | County-by-month retail/medical sales, an animated "bubbles" race through the years, and cumulative growth views | Colorado Open Data (`j7a3-jgd3`) |
 | ↳ [Crime in Colorado](https://mike-larson.me/colorado-data/crime) | Agency trends, offense rankings, and weekday/seasonal/hourly patterns | Colorado Open Data (`j6g4-gayk`) |
 | ↳ [Bike & Ped Counts](https://mike-larson.me/colorado-data/bike-counts) | CDOT counting stations sized by volume on a map, with hourly and seasonal profiles | Colorado Open Data (`q2qp-xhnj`) |
-| [**March Madness**](https://mike-larson.me/march-madness) | NCAA tournament bracket analysis — *coming soon* | — |
+| [**March Madness**](https://mike-larson.me/march-madness) | Hub for two NCAA tournament explorers (below) | [College Basketball Data](https://www.collegebasketballdata.com/) |
+| ↳ [Road to the Championship](https://mike-larson.me/march-madness/tournament) | Replay any season's bracket back to 1939 — First Four through the title game, with seeds, scores, venues, attendance, and Elo swings on every game | College Basketball Data |
+| ↳ [Cinderella Tracker](https://mike-larson.me/march-madness/cinderella) | Eighty-six seasons of upset math: seed-matchup danger rates, how double-digit seeds fare year by year, the 25 biggest shocks ever, and Final Four royalty | College Basketball Data |
 
 The homepage is a scroll-driven story through three scenes (Pullman, WA → Denver, CO → Seattle, WA) built with SVG and CSS only.
 
@@ -29,7 +31,7 @@ The homepage is a scroll-driven story through three scenes (Pullman, WA → Denv
 - **Charts & maps:** LayerChart · D3 scales · MapLibre GL
 - **Tables:** TanStack Table (sorting, filtering, column definitions per dataset)
 - **Testing:** Vitest 4 (node unit tests via `vitest.config.ts`)
-- **Deploy:** Vercel (`@sveltejs/adapter-vercel`, Node 22 runtime)
+- **Deploy:** Netlify (`@sveltejs/adapter-netlify`, Node-based Netlify Functions)
 
 ## Development
 
@@ -53,7 +55,7 @@ npm test           # Vitest unit tests
 | Script | Purpose |
 |---|---|
 | `npm run dev` | Vite dev server with HMR |
-| `npm run build` | Production build (Vercel adapter) |
+| `npm run build` | Production build (Netlify adapter) |
 | `npm run preview` | Preview the production build locally |
 | `npm run check:watch` | Type-check in watch mode |
 
@@ -65,7 +67,7 @@ src/
 │   ├── components/       # App components + shadcn ui/ primitives
 │   ├── config/           # Navigation routes and project metadata
 │   ├── hooks/            # is-mobile detection, etc.
-│   ├── *.ts              # API service layers (MLB, Sleeper, Colorado, DataUSA)
+│   ├── *.ts              # API service layers (MLB, Sleeper, NCAA, Colorado, DataUSA)
 │   └── *.test.ts         # Unit tests for pure data logic
 └── routes/               # One folder per project; components colocated with routes
 ```
@@ -78,7 +80,7 @@ Design conventions:
 
 ## Deployment
 
-Deploys to Vercel via `@sveltejs/adapter-vercel`. Static content is prerendered; pages render on demand. See [`vite.config.ts`](vite.config.ts) for adapter configuration.
+Deploys to Netlify via `@sveltejs/adapter-netlify`. Pages render on demand through Node-based Netlify Functions (all routes server-rendered; static assets served from the CDN). Environment variables (`CBBD_API_KEY`, `PUBLIC_EMAILJS_*`) are set in the Netlify UI. See [`vite.config.ts`](vite.config.ts) for adapter configuration.
 
 ## Contact
 

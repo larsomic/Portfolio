@@ -4,6 +4,8 @@
   import { page } from "$app/state";
   import { ROUTES, getHref, type NavLink } from "$lib/config/routes.js";
   import { useSidebar } from "$lib/components/ui/sidebar/context.svelte.js";
+  import { IconChevronDown } from "@tabler/icons-svelte";
+  import { cn } from "$lib/utils.js";
 
   let {
     ref = $bindable(null),
@@ -23,6 +25,38 @@
   }
 
   const sidebar = useSidebar();
+
+  /**
+   * Manual expand/collapse overrides, keyed by parent title. When there is
+   * no override, a section is open exactly when it (or one of its children)
+   * is the current page — so the active section always shows itself.
+   */
+  let toggles = $state<Record<string, boolean>>({});
+
+  function hasChildren(link: NavLink): boolean {
+    return !!link.items && link.items.length > 0;
+  }
+
+  function isOpen(link: NavLink): boolean {
+    return toggles[link.title] ?? (isParentActive(link) || isActive(link));
+  }
+
+  function toggle(link: NavLink) {
+    toggles[link.title] = !isOpen(link);
+  }
+
+  // Navigating into a section re-expands it, clearing any stale override.
+  // Reactivity: isParentActive/isActive below read page.url.pathname,
+  // so this effect re-runs on every navigation.
+  $effect(() => {
+    for (const group of ROUTES) {
+      for (const item of group.items) {
+        if (hasChildren(item) && (isParentActive(item) || isActive(item))) {
+          delete toggles[item.title];
+        }
+      }
+    }
+  });
 
   function handleClick(e: MouseEvent, link: NavLink) {
     if (link.isExternal) {
@@ -63,18 +97,40 @@
           <Sidebar.Menu>
             {#each group.items as item (item.title)}
               <Sidebar.MenuItem data-sidebar="menu-item">
-                <Sidebar.MenuButton
-                  isActive={isActive(item) || isParentActive(item)}
-                >
-                  {#snippet child({ props })}
-                    <a
-                      href={getHref(item)}
-                      {...props}
-                      onclick={(e) => handleClick(e, item)}
-                    >{item.title}</a>
-                  {/snippet}
-                </Sidebar.MenuButton>
-                {#if item.items}
+                <!-- Parent row: link + toggle stay on one line -->
+                <div class="flex w-full items-center">
+                  <Sidebar.MenuButton
+                    isActive={isActive(item) || isParentActive(item)}
+                    class={hasChildren(item) ? "min-w-0 flex-1" : undefined}
+                  >
+                    {#snippet child({ props })}
+                      <a
+                        href={getHref(item)}
+                        {...props}
+                        onclick={(e) => handleClick(e, item)}
+                      >{item.title}</a>
+                    {/snippet}
+                  </Sidebar.MenuButton>
+                  {#if hasChildren(item)}
+                    <button
+                      type="button"
+                      class="text-muted-foreground hover:text-foreground hover:bg-sidebar-accent flex size-7 shrink-0 items-center justify-center rounded-md transition-colors"
+                      aria-label={isOpen(item)
+                        ? `Collapse ${item.title} menu`
+                        : `Expand ${item.title} menu`}
+                      aria-expanded={isOpen(item)}
+                      onclick={() => toggle(item)}
+                    >
+                      <IconChevronDown
+                        class={cn(
+                          "size-4 transition-transform duration-200",
+                          isOpen(item) && "rotate-180",
+                        )}
+                      />
+                    </button>
+                  {/if}
+                </div>
+                {#if item.items && isOpen(item)}
                   <Sidebar.MenuSub>
                     {#each item.items as sub (sub.title)}
                       <Sidebar.MenuSubItem>
