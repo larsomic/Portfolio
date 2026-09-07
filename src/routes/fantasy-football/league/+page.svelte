@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { IconRefresh, IconTrophy } from "@tabler/icons-svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import TeamRosterDialog from "$lib/components/team-roster-dialog.svelte";
@@ -23,9 +24,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>League Members · Fantasy Football</title>
-</svelte:head>
+<SEO title="League Members · Fantasy Football · Michael Larson" description="Member cards for a Sleeper head-to-head fantasy football league, with full season history walked backwards through the previous-league chain." />
 
 <section class="flex flex-col gap-6">
   <div class="flex flex-wrap items-end justify-between gap-2">

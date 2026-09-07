@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     ChevronDown,
     ChevronLeft,
@@ -154,9 +155,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>MLB Games | Sabermetric Seer</title>
-</svelte:head>
+<SEO title="Game Center · Sabermetric Seer · Michael Larson" description="MLB game center with box scores, line scores, pitching lines, and pitch-level logs from the MLB Stats API." />
 
 <div class="flex flex-col gap-4">
   <div>

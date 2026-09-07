@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconArrowRight,
     IconBallBasketball,
@@ -36,13 +37,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>March Madness · Michael Larson</title>
-  <meta
-    name="description"
-    content="NCAA tournament history and upset analysis, powered by the College Basketball Data API."
-  />
-</svelte:head>
+<SEO title="March Madness · Michael Larson" description="NCAA tournament history and upset analysis, powered by the College Basketball Data API." />
 
 <div class="relative -mx-4 -mt-4 flex min-h-[calc(100vh-8rem)] flex-col overflow-hidden">
   <!-- Decorative glow -->

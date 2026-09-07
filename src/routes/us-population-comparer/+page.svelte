@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { browser } from "$app/environment";
   import * as Card from "$lib/components/ui/card/index.js";
   import PlacePicker from "$lib/components/pulse/place-picker.svelte";
@@ -74,9 +75,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>US Population Comparer | Compare Any Two Places</title>
-</svelte:head>
+<SEO title="US Population Comparer · Michael Larson" description="Side-by-side comparison of any two US states, metros, or counties: population, diversity, income, jobs, housing, commute, and health measures from DataUSA." />
 
 <div class="flex flex-col gap-4">
   <div>

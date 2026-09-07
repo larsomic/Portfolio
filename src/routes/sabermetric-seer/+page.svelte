@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconArrowsSort,
     IconBallBaseball,
@@ -105,9 +106,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Sabermetric Seer</title>
-</svelte:head>
+<SEO title="Sabermetric Seer · Michael Larson" description="An MLB stats explorer with league leaders, standings, transactions, a game center with box scores and pitch logs, and head-to-head player comparisons." />
 
 <div class="flex flex-col gap-8">
   <!-- Hero -->

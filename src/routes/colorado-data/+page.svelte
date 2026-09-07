@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { IconArrowRight, IconDatabase } from "@tabler/icons-svelte";
   import * as Card from "$lib/components/ui/card/index.js";
 
@@ -34,9 +35,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Colorado Data | Projects</title>
-</svelte:head>
+<SEO title="Colorado Data · Michael Larson" description="Hub for four explorers built on Colorado open data: Denver traffic accidents, the legal cannabis economy, statewide crime trends, and bike & pedestrian counts." />
 
 <div class="flex flex-col gap-4">
   <div>

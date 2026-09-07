@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { SvelteDate } from "svelte/reactivity";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
@@ -46,9 +47,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Denver Accidents | Traffic Map</title>
-</svelte:head>
+<SEO title="Denver Accidents · Colorado Data · Michael Larson" description="Map and trend analysis of traffic accidents in Denver from open city data." />
 
 <div class="flex flex-col gap-4">
   <div>

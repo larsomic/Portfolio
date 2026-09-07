@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconArrowUpRight,
     IconBrandGithub,
@@ -124,13 +125,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Contact · Michael Larson</title>
-  <meta
-    name="description"
-    content="Say hello to Michael Larson — questions about the projects on this portfolio, collaborations, or just talking sports stats."
-  />
-</svelte:head>
+<SEO title="Contact · Michael Larson" description="Say hello to Michael Larson — questions about the projects on this portfolio, collaborations, or just talking sports stats." />
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-8 py-6 lg:py-12">
   <!-- Intro -->

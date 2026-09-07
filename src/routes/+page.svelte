@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { browser } from "$app/environment";
   import {
     IconArrowLeft,
@@ -69,9 +70,8 @@
   const SHOW_CONTENT = false;
 </script>
 
-<svelte:head>
-  <title>Michael Larson · Software Engineer</title>
-</svelte:head>
+<SEO title="Michael Larson · Software Engineer" description="Interactive data explorers built with SvelteKit and Svelte 5 — MLB stats, fantasy football, NCAA tournament history, Colorado open data, and US Census comparisons. Built by software engineer Michael Larson." />
+
 
 <!-- Fixed scene backgrounds that crossfade as you travel down the page -->
 <div class="fixed inset-0" aria-hidden="true">

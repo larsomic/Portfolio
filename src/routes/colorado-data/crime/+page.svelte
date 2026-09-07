@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import * as Card from "$lib/components/ui/card/index.js";
   import TrendChart, { type TrendSeries } from "$lib/components/pulse/trend-chart.svelte";
   import RankedList from "$lib/components/pulse/ranked-list.svelte";
@@ -135,9 +136,7 @@
   const agencyLabel = $derived(agency || "Statewide (all agencies)");
 </script>
 
-<svelte:head>
-  <title>Crime in Colorado | Colorado Data</title>
-</svelte:head>
+<SEO title="Crime in Colorado · Michael Larson" description="Agency trends, offense rankings, and weekday/seasonal/hourly patterns from statewide law-enforcement reporting, visualized from Colorado open data." />
 
 <div class="flex flex-col gap-4">
   <div class="flex flex-wrap items-end justify-between gap-3">

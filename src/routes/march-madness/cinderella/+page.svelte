@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { IconCrown, IconSwords, IconUmbrella2, IconMapPin } from "@tabler/icons-svelte";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Badge } from "$lib/components/ui/badge/index.js";
@@ -26,9 +27,7 @@
   );
 </script>
 
-<svelte:head>
-  <title>Cinderella Tracker · March Madness</title>
-</svelte:head>
+<SEO title="Cinderella Tracker · March Madness · Michael Larson" description="Eighty-six seasons of NCAA tournament upset math: seed-matchup danger rates, double-digit seed records year by year, and the biggest shocks ever." />
 
 <section class="flex flex-col gap-6">
   <div>

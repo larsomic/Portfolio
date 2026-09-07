@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconBrandGithub,
     IconBrandLinkedin,
@@ -111,13 +112,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Résumé · Michael Larson</title>
-  <meta
-    name="description"
-    content="Résumé of Michael Larson — Software Engineer at Comcast, previously Meter Group. Experience, projects, education, and skills."
-  />
-</svelte:head>
+<SEO title="Résumé · Michael Larson" description="Résumé of Michael Larson — Software Engineer at Comcast, previously Meter Group. Experience, projects, education, and skills." />
 
 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8 py-6 lg:py-10">
   <!-- Header -->

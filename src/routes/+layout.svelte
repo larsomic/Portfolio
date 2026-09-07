@@ -29,7 +29,11 @@
   );
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+  <link rel="icon" href={favicon} />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#131518" />
+</svelte:head>
 <ModeWatcher />
 <Sidebar.Provider>
   {#if !hideChrome}
