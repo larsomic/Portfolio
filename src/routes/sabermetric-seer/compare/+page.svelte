@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconCheck as Check,
     IconChartBar,
@@ -421,6 +422,8 @@
     return slots[slot]?.profile?.pitchHand?.description ?? "—";
   }
 </script>
+
+<SEO title="Compare Players · Sabermetric Seer · Michael Larson" description="Head-to-head MLB player comparison with career-per-year charts and automatic traded-player season merging." />
 
 <div class="container flex flex-col gap-6 py-8">
   <header class="flex flex-col gap-2">

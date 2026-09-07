@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { RefreshCw } from "lucide-svelte";
   import { invalidateAll } from "$app/navigation";
   import { Button } from "$lib/components/ui/button/index.js";
@@ -22,9 +23,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>MLB Standings | Sabermetric Seer</title>
-</svelte:head>
+<SEO title="Standings · Sabermetric Seer · Michael Larson" description="MLB division and league standings with records, runs scored and allowed, from the MLB Stats API." />
 
 <div class="flex flex-col gap-6">
   <div class="flex items-start justify-between gap-4">

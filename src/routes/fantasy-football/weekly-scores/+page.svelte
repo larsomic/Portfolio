@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { browser } from "$app/environment";
   import {
     IconCalendarEvent,
@@ -223,9 +224,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Weekly Scores · Michael Larson</title>
-</svelte:head>
+<SEO title="Weekly Scores · Fantasy Football · Michael Larson" description="Week-by-week fantasy matchups with per-player game states and round-robin records, powered by the Sleeper API." />
 
 <section class="flex flex-col gap-6">
   <div class="flex flex-wrap items-end justify-between gap-2">

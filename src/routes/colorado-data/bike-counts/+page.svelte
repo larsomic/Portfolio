@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import TrendChart, { type TrendSeries } from "$lib/components/pulse/trend-chart.svelte";
@@ -117,9 +118,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>Bike &amp; Ped Counts | Colorado Data</title>
-</svelte:head>
+<SEO title="Bike & Ped Counts · Colorado Data · Michael Larson" description="CDOT bicycle and pedestrian counting stations sized by volume on a map, with hourly and seasonal profiles from Colorado open data." />
 
 <div class="flex flex-col gap-4">
   <div class="flex flex-wrap items-end justify-between gap-3">

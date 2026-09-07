@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconPlayerPause,
     IconPlayerPlay,
@@ -247,9 +248,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Cannabis Economy | Colorado Data</title>
-</svelte:head>
+<SEO title="Cannabis Economy · Colorado Data · Michael Larson" description="County-by-month retail and medical cannabis sales in Colorado, an animated bubbles race through the years, and cumulative growth views from open data." />
 
 <div class="flex flex-col gap-4">
   <div>

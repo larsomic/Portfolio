@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { IconTrophy, IconAlertTriangle, IconMapPin } from "@tabler/icons-svelte";
@@ -54,9 +55,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>Tournament Results · March Madness</title>
-</svelte:head>
+<SEO title="Tournament Results · March Madness · Michael Larson" description="Replay any NCAA tournament bracket back to 1939 — seeds, scores, venues, attendance, and Elo swings on every game." />
 
 <section class="flex flex-col gap-6">
   <div class="flex flex-wrap items-end justify-between gap-2">

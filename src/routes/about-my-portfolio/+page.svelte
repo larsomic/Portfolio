@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconArrowRight,
     IconBolt,
@@ -57,13 +58,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>About My Portfolio · Michael Larson</title>
-  <meta
-    name="description"
-    content="A SvelteKit-built portfolio of one-off projects, created purely for fun."
-  />
-</svelte:head>
+<SEO title="About My Portfolio · Michael Larson" description="A SvelteKit-built portfolio of one-off projects, created purely for fun." />
 
 <div class="relative -mx-4 -mt-4 flex min-h-[calc(100vh-8rem)] flex-col overflow-hidden">
   <!-- Decorative glow blobs (pure CSS, very on-brand orange & purple) -->

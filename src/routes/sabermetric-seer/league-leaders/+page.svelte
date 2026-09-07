@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import { Check, ChevronDown, RefreshCw } from "lucide-svelte";
   import { browser } from "$app/environment";
   import { Button } from "$lib/components/ui/button/index.js";
@@ -135,9 +136,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>League Leaders | Sabermetric Seer</title>
-</svelte:head>
+<SEO title="League Leaders · Sabermetric Seer · Michael Larson" description="Sortable, filterable MLB leaderboard tables for the current season, powered by the MLB Stats API." />
 
 <div class="flex flex-col gap-4">
   <div class="flex items-start justify-between gap-4">

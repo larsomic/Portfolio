@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SEO from "$lib/components/seo.svelte";
   import {
     IconArrowRight,
     IconCloudDataConnection,
@@ -52,13 +53,7 @@
   ];
 </script>
 
-<svelte:head>
-  <title>Fantasy Football · Michael Larson</title>
-  <meta
-    name="description"
-    content="A live fantasy football dashboard powered by the Sleeper API — real league data, rosters, matchups, and weekly scores."
-  />
-</svelte:head>
+<SEO title="Fantasy Football · Michael Larson" description="A live fantasy football dashboard powered by the Sleeper API — real league data, rosters, matchups, and weekly scores." />
 
 <div class="relative -mx-4 -mt-4 flex min-h-[calc(100vh-8rem)] flex-col overflow-hidden">
   <!-- Decorative glow -->
