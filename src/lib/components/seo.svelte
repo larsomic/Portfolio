@@ -13,7 +13,9 @@
 
   const SITE_NAME = "Michael Larson";
   const ORIGIN = "https://mike-larson.me";
-  const OG_IMAGE = `${ORIGIN}/images/seattle-waterfront.jpg`;
+  // Dedicated 1200×630 OG asset — LinkedIn's scraper is unreliable with WebP,
+  // so this one stays JPEG. See static/images/og-image.jpg.
+  const OG_IMAGE = `${ORIGIN}/images/og-image.jpg`;
 
   /** Absolute canonical URL for the current page. */
   const canonical = $derived(
