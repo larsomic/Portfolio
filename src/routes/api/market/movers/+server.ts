@@ -1,6 +1,6 @@
 import { json, type RequestEvent } from "@sveltejs/kit";
 
-import { intParam, type MoverRow } from "$lib/alpaca.js";
+import { intParam } from "$lib/alpaca.js";
 import { alpacaErrorResponse, getMovers, type MoverKind } from "$lib/server/alpaca.js";
 
 export const prerender = false;
