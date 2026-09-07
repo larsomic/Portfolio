@@ -5,6 +5,7 @@
   import * as Sidebar from "$lib/components/ui/sidebar/index.js";
   import { Separator } from "$lib/components/ui/separator/index.js";
   import AppSidebar from "$lib/components/app-sidebar.svelte";
+  import SourceLink from "$lib/components/source-link.svelte";
   import favicon from "$lib/assets/favicon.svg";
   import { page } from "$app/state";
   import { getTitleForSlug } from "$lib/config/routes.js";
@@ -41,7 +42,7 @@
       >
         <Sidebar.Trigger class="-ms-1" />
         <Separator orientation="vertical" class="me-2 h-4" />
-        <Breadcrumb.Root class="min-w-0 flex-1">
+        <Breadcrumb.Root class="min-w-0 flex-1 truncate">
           <Breadcrumb.List>
             <Breadcrumb.Item>
               <Breadcrumb.Link href="/">Michael Larson</Breadcrumb.Link>
@@ -59,6 +60,7 @@
             {/each}
           </Breadcrumb.List>
         </Breadcrumb.Root>
+        <SourceLink />
       </header>
     {/if}
     <div class="flex min-w-0 flex-1 flex-col gap-4 p-4">
