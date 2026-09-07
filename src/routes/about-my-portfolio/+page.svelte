@@ -180,7 +180,7 @@
       </Card.Header>
       <Card.Footer>
         <span class="text-xs text-muted-foreground">
-          Sports now. Finance experiments loading… ⚒️
+          Sports and markets now — whatever the next API dares me to build ⚒️
         </span>
       </Card.Footer>
     </Card.Root>
@@ -196,33 +196,53 @@
       {#each PROJECTS as project (project.title)}
         {@const soon = project.status === "soon"}
         <div class={cn(soon && "opacity-60")}>
-          <a
-            href={soon ? undefined : project.slug}
-            class={cn("block h-full", soon && "pointer-events-none")}
-          >
-            <Card.Root
-              class="group h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
-            >
+          {#if soon}
+            <Card.Root class="h-full">
               <Card.Header>
                 <div class="flex items-center justify-between gap-2">
                   <Card.Title class="text-lg">{project.title}</Card.Title>
-                  {#if !soon}
-                    <IconArrowRight
-                      class="text-muted-foreground size-4 shrink-0 transition-transform group-hover:translate-x-1"
-                    />
-                  {/if}
+                  <Badge variant="destructive">soon</Badge>
                 </div>
                 <Card.Description>{project.description}</Card.Description>
               </Card.Header>
               <Card.Footer class="gap-1.5">
-                {#each project.tags as tag (tag)}
-                  <Badge variant={tag === "soon" ? "destructive" : "secondary"}>
-                    {tag}
+                {#if project.source}
+                  <Badge variant="outline" class="font-mono text-[10px]">
+                    {project.source}
                   </Badge>
+                {/if}
+                {#each project.tags as tag (tag)}
+                  <Badge variant="secondary">{tag}</Badge>
                 {/each}
               </Card.Footer>
             </Card.Root>
-          </a>
+          {:else}
+            <a href={project.slug} class="block h-full">
+              <Card.Root
+                class="group h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <Card.Header>
+                  <div class="flex items-center justify-between gap-2">
+                    <Card.Title class="text-lg">{project.title}</Card.Title>
+                    <IconArrowRight
+                      class="text-muted-foreground size-4 shrink-0 transition-transform group-hover:translate-x-1"
+                    />
+                  </div>
+                  <Card.Description>{project.description}</Card.Description>
+                </Card.Header>
+                <Card.Footer class="gap-1.5">
+                  {#if project.source}
+                    <Badge variant="outline" class="font-mono text-[10px]">
+                      {project.source}
+                    </Badge>
+                  {/if}
+                  {#each project.tags as tag (tag)}
+                    <Badge variant="secondary">{tag}</Badge>
+                  {/each}
+                </Card.Footer>
+              </Card.Root>
+            </a>
+          {/if}
         </div>
       {/each}
     </div>
