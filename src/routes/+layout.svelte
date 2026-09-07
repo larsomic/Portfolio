@@ -6,6 +6,7 @@
   import { Separator } from "$lib/components/ui/separator/index.js";
   import AppSidebar from "$lib/components/app-sidebar.svelte";
   import SourceLink from "$lib/components/source-link.svelte";
+  import CookieBanner from "$lib/components/cookie-banner.svelte";
   import favicon from "$lib/assets/favicon.svg";
   import { page } from "$app/state";
   import { getTitleForSlug } from "$lib/config/routes.js";
@@ -72,3 +73,5 @@
     </div>
   </Sidebar.Inset>
 </Sidebar.Provider>
+
+<CookieBanner />
