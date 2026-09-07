@@ -58,6 +58,10 @@ export const ROUTES: NavGroup[] = [
             slug: "us-population-comparer",
           },
           {
+            title: "Market Pulse",
+            slug: "market-pulse",
+          },
+          {
             title: "Colorado Data",
             slug: "colorado-data",
             items: [

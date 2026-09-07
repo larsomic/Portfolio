@@ -2,39 +2,52 @@
   import { IconArrowsExchange } from "@tabler/icons-svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import PhotoFrame from "$lib/components/photo-frame.svelte";
+  import { LIVE_PROJECTS } from "$lib/config/projects.js";
 
   let flipped = $state(false);
 
-  const REPORT = [
-    { tool: "Svelte / TypeScript", rating: 80 },
-    { tool: "API Integration", rating: 75 },
-    { tool: "Python & Data", rating: 70 },
-    { tool: "Charts & Viz", rating: 70 },
-    { tool: "Trail Stamina", rating: 55 },
+  /**
+   * Career splits, not self-assessed skill bars. Every row is pulled from the
+   * résumé page (or counted off the live project list) so it can't drift into
+   * fiction. Keep it that way when you edit.
+   */
+  const SPLITS = [
+    { split: "Seasons shipping code", value: "2021 → today" },
+    { split: "Day job", value: "SE 2 @ Comcast" },
+    { split: "Daily users on a portal I built", value: "3,000+" },
+    { split: "Apps in this portfolio", value: `${LIVE_PROJECTS.length}` },
+    {
+      // Derived from the project config so it can't drift when projects change.
+      split: "Public datasets wrangled",
+      value: `${new Set(LIVE_PROJECTS.map((p) => p.source)).size}`,
+    },
+    { split: "WSU hackathon", value: "2nd place" },
   ];
 </script>
 
 <div class="flex flex-col items-center gap-4">
   <div class="relative w-64 sm:w-72" style="aspect-ratio: 5 / 7;">
     <div
-      class="h-full w-full transition-transform duration-700"
+      class="h-full w-full transition-transform duration-700 motion-reduce:transition-none"
       style="transform-style: preserve-3d; transform: perspective(1200px) rotateY({flipped ? 180 : 0}deg);"
     >
       <!-- FRONT -->
       <div
         class="absolute inset-0 rounded-xl p-[10px] shadow-2xl"
         style="backface-visibility: hidden; background: linear-gradient(150deg, #d4a017 0%, #8a6d1d 35%, #f5d67b 55%, #8a6d1d 75%, #d4a017 100%);"
-        role="img"
-        aria-label="Michael Larson player card"
+        aria-hidden={flipped ? true : undefined}
       >
         <div
           class="relative flex h-full w-full flex-col overflow-hidden rounded-lg bg-card"
         >
           <div class="relative flex-[3]">
+            <!-- TODO(Michael): replace with a real portrait — the file in
+                 static/images right now is a bowl of fruit. Ship a headshot
+                 before sending this link to anyone you want to hire you. -->
             <PhotoFrame
-              src="/images/card.jpg"
+              src="/images/card.webp"
               alt="Michael Larson"
-              hint="static/images/card.jpg"
+              hint="static/images/card.webp"
             />
             <div
               class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/60 to-transparent"
@@ -57,10 +70,10 @@
               Michael Larson
             </h3>
             <p class="text-primary text-xs font-semibold tracking-wide uppercase">
-              Software Engineer
+              Software Engineer 2 · Comcast
             </p>
             <p class="text-muted-foreground mt-1 text-[11px] italic">
-              From the Palouse, via Puget Sound
+              Denver, Colorado — built on public data
             </p>
           </div>
         </div>
@@ -70,6 +83,7 @@
       <div
         class="absolute inset-0 rounded-xl p-[10px] shadow-2xl"
         style="backface-visibility: hidden; transform: rotateY(180deg); background: linear-gradient(150deg, #d4a017 0%, #8a6d1d 35%, #f5d67b 55%, #8a6d1d 75%, #d4a017 100%);"
+        aria-hidden={flipped ? undefined : true}
       >
         <div
           class="flex h-full w-full flex-col overflow-hidden rounded-lg bg-card p-4"
@@ -77,35 +91,27 @@
           <h4
             class="font-serif text-center text-sm font-bold tracking-[0.25em] uppercase"
           >
-            Scouting Report
+            Career Splits
           </h4>
-          <div class="mt-3 space-y-2">
-            {#each REPORT as row (row.tool)}
-              <div class="flex items-center gap-2 text-[11px]">
-                <span class="w-32 shrink-0 font-medium">{row.tool}</span>
-                <span
-                  class="bg-muted relative h-2 flex-1 overflow-hidden rounded-full"
-                >
-                  <span
-                    class="bg-primary absolute inset-y-0 left-0 rounded-full"
-                    style="width: {row.rating}%;"
-                  ></span>
-                </span>
-                <span
-                  class="text-muted-foreground w-6 text-right font-mono tabular-nums"
-                >
-                  {row.rating}
-                </span>
+          <dl class="mt-3 space-y-1.5">
+            {#each SPLITS as row (row.split)}
+              <div
+                class="flex items-baseline justify-between gap-2 border-b border-dashed text-[11px] last:border-0"
+              >
+                <dt class="text-muted-foreground shrink-0">{row.split}</dt>
+                <dd class="font-mono text-right font-semibold tabular-nums">
+                  {row.value}
+                </dd>
               </div>
             {/each}
-          </div>
+          </dl>
 
           <p
             class="text-muted-foreground mt-4 flex-1 text-[11px] leading-relaxed"
           >
-            Builds data-driven apps for the web — sports stats today, finance
-            experiments next. Ships fast, refactors honestly. When the laptop
-            closes, you'll find him on a Colorado trail looking up at peaks.
+            Weekdays: production React, Terraform, and SQL at Comcast.
+            Saturdays: whatever the public APIs let me build. Same care either
+            way — no self-rated skill bars, just numbers somebody else can check.
           </p>
           <p
             class="text-muted-foreground text-right font-serif text-sm italic"
