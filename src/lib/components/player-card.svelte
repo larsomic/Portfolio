@@ -123,7 +123,12 @@
     </div>
   </div>
 
-  <Button variant="outline" size="sm" onclick={() => (flipped = !flipped)}>
+  <Button
+    variant="outline"
+    size="sm"
+    class="bg-background/90 shadow-md backdrop-blur"
+    onclick={() => (flipped = !flipped)}
+  >
     <IconArrowsExchange class="size-4" />
     {flipped ? "Back to card front" : "Flip for scouting report"}
   </Button>
