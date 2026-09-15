@@ -13,7 +13,6 @@
   import { Badge } from "$lib/components/ui/badge/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
-  import PhotoFrame from "$lib/components/photo-frame.svelte";
   import PlayerCard from "$lib/components/player-card.svelte";
   import ScenePullman from "$lib/components/scenes/scene-pullman.svelte";
   import SceneSeattle from "$lib/components/scenes/scene-seattle.svelte";
@@ -31,31 +30,6 @@
     "TanStack Table",
     "Python",
     "SQL",
-  ];
-
-  /**
-   * Off-the-clock reel. None of these are trails yet — drop the real shots in
-   * static/images/ and update src / alt / caption per slot. Three slots, one
-   * per grid tile; add or remove freely.
-   */
-  const OFF_CLOCK = [
-    {
-      src: "/images/hike-2.webp",
-      alt: "The Seattle skyline from Elliott Bay, the Space Needle on the left",
-      caption: "Elliott Bay, one more time",
-    },
-    {
-      src: "/images/hike-3.webp",
-      alt: "Broncos game at Empower Field at dusk, seen from the upper deck",
-      caption: "Section 612, losing voice",
-    },
-    {
-      // Yes, this one is a warehouse-store cart. It earns its slot back the day
-      // there's a photo of an actual summit in it.
-      src: "/images/hike-1.webp",
-      alt: "A red-handled shopping cart inside a warehouse store",
-      caption: "The fuel run, unglamorous",
-    },
   ];
 
   const CONTACTS = [
@@ -158,7 +132,7 @@
   }
 
   function sectionLabelClass() {
-    return "border-white/25 bg-black/35 text-white backdrop-blur";
+    return "border-white/25 bg-black/50 text-white backdrop-blur";
   }
 
 </script>
@@ -179,7 +153,7 @@
     </div>
   {/each}
   <!-- Contrast scrim so text stays readable over the illustrations -->
-  <div class="absolute inset-0 bg-linear-to-b from-black/30 via-black/5 to-black/40"></div>
+  <div class="absolute inset-0 bg-linear-to-b from-black/40 via-black/15 to-black/50"></div>
 </div>
 
 <div class="-mx-4 flex flex-col">
@@ -187,8 +161,12 @@
   <section
     class="relative flex min-h-screen flex-col justify-center gap-10 px-4 py-24 lg:flex-row lg:items-center lg:justify-between lg:gap-16 lg:px-12"
   >
+    <!-- Copy panel: the Palouse scene has a light sand band that eats
+         paragraph contrast (~2.5:1 mid-line). A soft dark plate hugging the
+         text block lifts it above 4.5:1 without washing the artwork — much
+         calmer than any full-section scrim could be. -->
     <div
-      class="flex max-w-xl flex-col items-center gap-6 text-center lg:items-start lg:text-left"
+      class="relative flex max-w-xl flex-col items-center gap-6 rounded-[2rem] bg-black/30 px-6 py-8 text-center backdrop-blur-[3px] sm:px-8 lg:items-start lg:text-left"
     >
       <Badge variant="outline" class={sectionLabelClass()}>
         📍 Mile 0 · The Palouse, Washington
@@ -219,6 +197,17 @@
         {/each}
       </div>
 
+      <!-- One CTA. The scroll hint below is ambience; this is the instruction. -->
+      <div class="flex justify-center lg:justify-start">
+        <a
+          href="#projects"
+          class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold shadow-lg transition-colors"
+        >
+          See the work
+          <IconArrowDown class="size-4" />
+        </a>
+      </div>
+
       <div class="mt-4 lg:hidden">
         <PlayerCard />
       </div>
@@ -238,80 +227,39 @@
     </div>
   </section>
 
-  <!-- STOP 2 · SEATTLE — off the clock, in case that's surprising -->
+  <!-- STOP 2 · SEATTLE — a breather between the pitch and the work.
+       No photos here: an illustrated skyline doesn't need a photographic
+       one competing with it. The copy sits on a solid panel so contrast
+       never depends on where the hills happen to be. Drop a real photo
+       reel back in once there are real shots worth showing. -->
   <section
-    class="relative flex min-h-screen flex-col justify-center gap-6 px-4 py-24 lg:px-12"
+    class="relative flex min-h-screen flex-col items-center justify-center px-4 py-24 lg:px-12"
   >
-    <!-- Featured waterfront photo with the title overlaid, like a postcard -->
     <div
-      class="group relative overflow-hidden rounded-2xl border border-white/20 shadow-2xl"
-      style="aspect-ratio: 16 / 9; max-height: 58vh;"
+      class="w-full max-w-lg rounded-2xl border border-white/20 bg-black/45 p-6 backdrop-blur sm:p-8"
     >
-      <PhotoFrame
-        src="/images/seattle-waterfront.webp"
-        alt="The Seattle Great Wheel at Pier 57 with the downtown skyline over Elliott Bay"
-        hint="static/images/seattle-waterfront.jpg"
-        className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-      />
-      <!-- Scrim so the overlaid text stays legible -->
-      <div
-        class="absolute inset-0 bg-linear-to-t from-black/70 via-black/25 to-transparent"
-      ></div>
-      <div
-        class="absolute inset-x-0 bottom-0 flex flex-col items-start gap-2 p-6 sm:p-10"
+      <Badge variant="outline" class={sectionLabelClass()}>
+        🥾 Off the Clock · Denver &amp; wherever the trailhead is
+      </Badge>
+      <h2
+        class="mt-3 font-serif text-3xl font-bold text-white sm:text-4xl"
       >
-        <Badge variant="outline" class={sectionLabelClass()}>
-          🥾 Off the Clock · Denver &amp; wherever the trailhead is
-        </Badge>
-        <h2
-          class="drop-shadow-lg font-serif text-3xl font-bold text-white sm:text-4xl"
-        >
-          Same curiosity, worse altitude
-        </h2>
-        <p
-          class="drop-shadow-md max-w-xl text-sm leading-relaxed text-white/85 sm:text-base"
-        >
-          Off the laptop it's climbs I keep overestimating, a stadium seat
-          when the Broncos play, and a lot of time in airports. The curiosity
-          is the same one that shows up in the code.
-        </p>
-      </div>
+        Same curiosity, worse altitude
+      </h2>
+      <p
+        class="mt-3 text-sm leading-relaxed text-white/85 sm:text-base"
+      >
+        Off the laptop, it's climbs I keep overestimating, a section-612
+        voice at Mile High, and trails I'd call "moderate" to anyone who'd
+          listen. The curiosity is the same one that shows up in the code.
+      </p>
     </div>
-
-    <div class="grid gap-4 sm:grid-cols-3">
-      {#each OFF_CLOCK as shot (shot.src)}
-        <div
-          class="group relative overflow-hidden rounded-xl border border-white/20 shadow-lg transition-shadow hover:shadow-2xl"
-          style="aspect-ratio: 3 / 2;"
-        >
-          <PhotoFrame
-            src={shot.src}
-            alt={shot.alt}
-            hint={`static/images/${shot.src.split("/").pop()}`}
-            className="transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-          />
-          <div
-            class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-3"
-          >
-            <span
-              class="drop-shadow-md font-serif text-xs italic text-white sm:text-sm"
-            >
-              {shot.caption}
-            </span>
-          </div>
-        </div>
-      {/each}
-    </div>
-
-    <p class="text-center text-xs text-white/70">
-      These three are stand-ins. The real reel shows up the day I stop
-      carrying a camera on hikes.
-    </p>
   </section>
 
   <!-- STOP 3 · DENVER — the work, and how to reach me -->
   <section
-    class="relative flex min-h-screen flex-col justify-center gap-6 px-4 py-24 lg:px-12"
+    id="projects"
+    class="relative flex min-h-screen scroll-mt-6 flex-col justify-center gap-6 px-4 py-24 lg:px-12"
   >
     <Badge variant="outline" class={cn(sectionLabelClass(), "w-fit")}>
       📍 The Rockies · Denver, Colorado
