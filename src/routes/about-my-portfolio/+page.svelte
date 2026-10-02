@@ -3,6 +3,8 @@
   import {
     IconArrowRight,
     IconBolt,
+    IconBrandGithub,
+    IconCircleCheck,
     IconHeart,
     IconRocket,
     IconSparkles,
@@ -217,31 +219,60 @@
               </Card.Footer>
             </Card.Root>
           {:else}
-            <a href={project.slug} class="block h-full">
-              <Card.Root
-                class="group h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <Card.Header>
-                  <div class="flex items-center justify-between gap-2">
-                    <Card.Title class="text-lg">{project.title}</Card.Title>
-                    <IconArrowRight
-                      class="text-muted-foreground size-4 shrink-0 transition-transform group-hover:translate-x-1"
-                    />
-                  </div>
-                  <Card.Description>{project.description}</Card.Description>
-                </Card.Header>
-                <Card.Footer class="gap-1.5">
-                  {#if project.source}
-                    <Badge variant="outline" class="font-mono text-[10px]">
-                      {project.source}
-                    </Badge>
-                  {/if}
-                  {#each project.tags as tag (tag)}
-                    <Badge variant="secondary">{tag}</Badge>
-                  {/each}
-                </Card.Footer>
-              </Card.Root>
-            </a>
+            <Card.Root
+              class="group relative h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <Card.Header>
+                <div class="flex items-center justify-between gap-2">
+                  <Card.Title class="text-lg">
+                    <a
+                      href={project.slug}
+                      class="hover:text-primary after:absolute after:inset-0"
+                      >{project.title}</a
+                    >
+                  </Card.Title>
+                  <IconArrowRight
+                    class="text-muted-foreground size-4 shrink-0 transition-transform group-hover:translate-x-1"
+                  />
+                </div>
+                <Card.Description>{project.description}</Card.Description>
+                {#if project.tech}
+                  <p class="text-muted-foreground mt-2 text-xs leading-relaxed">
+                    {project.tech}
+                  </p>
+                {/if}
+              </Card.Header>
+              <Card.Footer class="flex-wrap gap-1.5">
+                {#if project.source}
+                  <Badge variant="outline" class="font-mono text-[10px]">
+                    {project.source}
+                  </Badge>
+                {/if}
+                {#each project.tags as tag (tag)}
+                  <Badge variant="secondary">{tag}</Badge>
+                {/each}
+                {#if project.tested}
+                  <Badge
+                    variant="outline"
+                    class="gap-1 border-emerald-500/30 text-[10px] text-emerald-600 dark:text-emerald-400"
+                  >
+                    <IconCircleCheck class="size-3" />
+                    Tested
+                  </Badge>
+                {/if}
+                {#if project.repo}
+                  <a
+                    href={project.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="hover:text-primary text-muted-foreground relative z-10 ml-auto inline-flex items-center gap-1 text-xs font-medium underline-offset-4 hover:underline"
+                  >
+                    <IconBrandGithub class="size-3.5" />
+                    Code
+                  </a>
+                {/if}
+              </Card.Footer>
+            </Card.Root>
           {/if}
         </div>
       {/each}

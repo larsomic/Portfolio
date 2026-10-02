@@ -6,6 +6,35 @@
 
   let flipped = $state(false);
 
+  // ---- Holographic hover: cursor-tracked 3D tilt + foil glare ----
+  let tiltX = $state(0);
+  let tiltY = $state(0);
+  let glareX = $state(50);
+  let glareY = $state(50);
+  let hovering = $state(false);
+  const MAX_TILT = 9;
+
+  function onMove(e: PointerEvent) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = e.currentTarget as HTMLElement;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width; // 0 (left) .. 1 (right)
+    const py = (e.clientY - r.top) / r.height; // 0 (top) .. 1 (bottom)
+    tiltY = (px - 0.5) * 2 * MAX_TILT;
+    tiltX = -(py - 0.5) * 2 * MAX_TILT;
+    glareX = px * 100;
+    glareY = py * 100;
+    hovering = true;
+  }
+
+  function onLeave() {
+    hovering = false;
+    tiltX = 0;
+    tiltY = 0;
+    glareX = 50;
+    glareY = 50;
+  }
+
   /**
    * Career splits, not self-assessed skill bars. Every row is pulled from the
    * résumé page (or counted off the live project list) so it can't drift into
@@ -26,11 +55,24 @@
 </script>
 
 <div class="flex flex-col items-center gap-4">
-  <div class="relative w-64 sm:w-72" style="aspect-ratio: 5 / 7;">
+  <div
+    role="group"
+    aria-label="Michael Larson trading card"
+    class="relative w-64 select-none sm:w-72"
+    style="aspect-ratio: 5 / 7; perspective: 1200px;"
+    onpointermove={onMove}
+    onpointerleave={onLeave}
+  >
+    <!-- tilt layer: leans toward the cursor -->
     <div
-      class="h-full w-full transition-transform duration-700 motion-reduce:transition-none"
-      style="transform-style: preserve-3d; transform: perspective(1200px) rotateY({flipped ? 180 : 0}deg);"
+      class="h-full w-full"
+      style="transform-style: preserve-3d; transform: rotateX({tiltX}deg) rotateY({tiltY}deg); transition: transform {hovering ? '80ms' : '400ms'} ease-out;"
     >
+      <!-- flip layer -->
+      <div
+        class="h-full w-full transition-transform duration-700 motion-reduce:transition-none"
+        style="transform-style: preserve-3d; transform: rotateY({flipped ? 180 : 0}deg);"
+      >
       <!-- FRONT -->
       <div
         class="absolute inset-0 rounded-xl p-[10px] shadow-2xl"
@@ -76,6 +118,17 @@
               Denver, Colorado — built on public data
             </p>
           </div>
+
+          <!-- foil glare: a soft highlight that tracks the cursor -->
+          <div
+            class="pointer-events-none absolute inset-0 z-20 rounded-lg transition-opacity duration-200"
+            style="opacity: {hovering && !flipped ? 1 : 0}; background: radial-gradient(circle at {glareX}% {glareY}%, rgba(255,255,255,0.45), rgba(255,255,255,0) 45%); mix-blend-mode: soft-light;"
+          ></div>
+          <!-- holographic sheen: rainbow band that shifts with the cursor -->
+          <div
+            class="pointer-events-none absolute inset-0 z-20 rounded-lg transition-opacity duration-200"
+            style="opacity: {hovering && !flipped ? 0.4 : 0}; background: linear-gradient(115deg, transparent 25%, rgba(255,0,153,0.5), rgba(0,221,255,0.5), rgba(123,255,0,0.5), transparent 75%); background-size: 200% 200%; background-position: {glareX}% {glareY}%; mix-blend-mode: color-dodge;"
+          ></div>
         </div>
       </div>
 
@@ -119,6 +172,7 @@
             — M. Larson
           </p>
         </div>
+      </div>
       </div>
     </div>
   </div>

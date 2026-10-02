@@ -42,9 +42,10 @@
       company: "Comcast",
       period: "Apr 2025 – Present",
       bullets: [
-        "Developed and maintained a production-ready internal portal using React that is used every day by over 3,000 employees — letting them run SQL queries, connect with support, and use AI tools to tune their queries.",
-        "Established a GitHub Actions suite using Terraform and the AWS CLI to create and scale AWS EC2 instances across multiple availability zones, leading to 10-minute deployments and 99% uptime during upgrades.",
-        "Participated in an employee leadership and mentoring program, spending nine months building and pitching a production application to senior leadership.",
+        "Lead developer on a React internal portal (a project within a larger team) used daily by 3,000+ employees for running SQL queries, connecting with support, and AI-assisted query tuning; direct a two-person project team and own the work end-to-end — from solution design and estimation through production rollout — setting code-quality and delivery standards via code review and hands-on guidance.",
+        "Mentored an intern over the past year through onboarding and hands-on technical coaching, guiding them to a full-time conversion and continuing to mentor them as the second engineer on my project.",
+        "Built the frontend/UX for an AI-assisted SQL query-tuning feature, surfacing model-generated tuning suggestions to users within the portal.",
+        "Built a GitHub Actions CI/CD suite with Terraform and the AWS CLI to provision and auto-scale EC2 instances across multiple availability zones, cutting deployments to ~10 minutes with zero-downtime rolling upgrades.",
       ],
     },
     {
@@ -52,9 +53,9 @@
       company: "Meter Group Inc.",
       period: "Dec 2022 – Apr 2025",
       bullets: [
-        "Spearheaded a backend project to integrate API services, ensuring smooth data flow across platforms, which led to a ~40% reduction in load times and a 30% improvement in the application's performance metrics.",
-        "Orchestrated the transition of design files to interactive, mobile-optimized websites using React and MUI — leading to a 60% increase in mobile traffic, amplifying brand exposure and boosting user engagement.",
-        "Revamped front-end and back-end systems by implementing pagination, cutting page load times by over 2,000% and improving data retrieval speeds for faster loading, searching, and filtering.",
+        "Designed and built, end-to-end, a backend consolidation unifying 6 API services behind a single gateway for a data/analytics platform processing large-scale environmental sensor (IoT) data — reducing average endpoint response time from 900ms to 350ms (~61%) and lowering client load times across platforms.",
+        "Implemented server-side pagination and query optimization over a million-row sensor dataset, reducing initial page load from ~8s to under 500ms and delivering scalable, performant data access.",
+        "Converted Figma designs into responsive, mobile-optimized interfaces with React and MUI, improving mobile UX and contributing to a 60% year-over-year increase in mobile traffic.",
       ],
     },
     {
@@ -62,9 +63,9 @@
       company: "Meter Group Inc.",
       period: "Apr 2021 – Dec 2022",
       bullets: [
-        "Built a comprehensive test suite using Robot Framework to simulate frontend user interactions, leading to the identification and resolution of 40+ bugs and enhancing application stability and user satisfaction by 35%.",
-        "Managed the resolution of 80+ frontend bugs, significantly enhancing the app's usability and functionality — a 25% decrease in user-reported issues and a 20% increase in positive feedback.",
-        "Refined web app responsiveness and cross-browser compatibility, resulting in a 25% increase in user engagement and a 20% decrease in bounce rates through adaptive design and rigorous testing across devices.",
+        "Built an automated end-to-end test suite with Robot Framework simulating frontend user flows, surfacing and resolving 40+ bugs before release and establishing regression coverage for critical paths.",
+        "Resolved 80+ frontend bugs across usability and functionality defects, contributing to a measurable drop in inbound user-reported issues over the following release cycles.",
+        "Improved web app responsiveness and cross-browser compatibility through adaptive/responsive design, validated with cross-device testing to ensure consistent rendering across major browsers and screen sizes.",
       ],
     },
   ];
@@ -90,14 +91,7 @@
       name: "Music Video Generator",
       bullets: [
         "Created an engaging UI using Vue and Material UI letting users generate music videos by dragging their clips, with customization via predefined themes and templates.",
-        "Pioneered backend integration with Google Cloud APIs for text extraction from audio, improving narrative and thematic alignment while cutting rendering times by 30%.",
-      ],
-    },
-    {
-      name: "Virtual Classroom Simulator · Second Place, WSU Hackathon",
-      bullets: [
-        "Built a Unity-based multiplayer application using C++ for character movement and networking, transforming virtual school interactions into an engaging RPG-like environment during the COVID-19 pandemic.",
-        "Incorporated proximity-based voice and video chat enabling real-time communication among students in an interactive map, fostering community in a virtual learning space.",
+        "Integrated Google Cloud speech-to-text APIs to extract lyrics/narration from audio for theme alignment, and optimized the rendering pipeline to cut render times by ~30%.",
       ],
     },
   ];
@@ -105,14 +99,24 @@
   const skills = [
     "React",
     "TypeScript",
-    "HTML",
-    "CSS",
-    "Terraform",
+    "JavaScript",
+    "Svelte",
+    "Python",
     "SQL",
+    "C#",
+    "Node.js",
+    "AWS",
+    "Terraform",
+    "CI/CD",
+    "TensorFlow",
+    "HTML/CSS",
   ];
 </script>
 
-<SEO title="Résumé · Michael Larson" description="Résumé of Michael Larson — Software Engineer at Comcast, previously Meter Group. Experience, projects, education, and skills." />
+<SEO
+  title="Résumé · Michael Larson"
+  description="Résumé of Michael Larson — Software Engineer at Comcast, previously Meter Group. Experience, projects, education, and skills."
+/>
 
 <div class="mx-auto flex w-full max-w-4xl flex-col gap-8 py-6 lg:py-10">
   <!-- Header -->
@@ -167,9 +171,7 @@
           >
             <Card.Title class="text-lg">
               {job.role}
-              <span
-                class="text-muted-foreground ml-2 text-base font-normal"
-              >
+              <span class="text-muted-foreground ml-2 text-base font-normal">
                 · {job.company}
               </span>
             </Card.Title>
@@ -211,7 +213,7 @@
               <a
                 href={project.href}
                 class="hover:text-primary underline-offset-4 transition-colors hover:underline"
-              >{project.name}</a
+                >{project.name}</a
               >
             {:else}
               {project.name}
@@ -242,13 +244,13 @@
       >
         Education
       </h2>
-      <Card.Root>
+      <Card.Root class="min-h-[110px]">
         <Card.Header>
-          <Card.Title class="text-base">
-            Washington State University
-          </Card.Title>
+          <Card.Title class="text-base">Washington State University</Card.Title>
           <Card.Description>
             B.S. in Software Engineering · Minor in Statistics
+            <br />
+            Graduated December 2022
           </Card.Description>
         </Card.Header>
       </Card.Root>
@@ -260,8 +262,9 @@
       >
         Languages &amp; Skills
       </h2>
-      <Card.Root>
+      <Card.Root class="min-h-[110px]">
         <Card.Header>
+          <Card.Title class="text-base">Full-Stack Software Engineer</Card.Title>
           <div class="flex flex-wrap gap-2">
             {#each skills as skill (skill)}
               <Badge variant="secondary">{skill}</Badge>
@@ -271,8 +274,4 @@
       </Card.Root>
     </section>
   </div>
-
-  <p class="text-muted-foreground text-center text-xs">
-    Same content as the PDF — this page is just the living version. 📄
-  </p>
 </div>

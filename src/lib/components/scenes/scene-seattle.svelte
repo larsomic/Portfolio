@@ -18,12 +18,20 @@
       <stop offset="0" stop-color="#5e7f8e" />
       <stop offset="1" stop-color="#4c6c7d" />
     </linearGradient>
+    <radialGradient id="sun-glow-seattle">
+      <stop offset="0" stop-color="#fff2d6" stop-opacity="0.85" />
+      <stop offset="0.45" stop-color="#ffd9a1" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#ffd9a1" stop-opacity="0" />
+    </radialGradient>
   </defs>
 
   <!-- warm cloudless sunset sky -->
   <rect width="1200" height="540" fill="url(#sky-seattle)" />
-  <!-- lone bird, upper right -->
-  <path d="M918,84 q5,-6 10,0 M918,84 q-5,-6 -10,0" stroke="#5a463c" stroke-width="1.5" fill="none" opacity="0.7" />
+
+  <!-- low golden-hour sun with a soft halo (centered so it survives the
+       mobile slice-crop) -->
+  <circle cx="700" cy="120" r="58" fill="url(#sun-glow-seattle)" />
+  <circle cx="700" cy="120" r="17" fill="#ffe9c6" opacity="0.95" />
 
   <!-- ONE snow massif: single summit shifted left to x=380 so it clears the
        Needle (x=600); jagged ridge teeth descend monotonically to both edges,
@@ -75,6 +83,7 @@
   <g>
     <rect x="598.2" y="270" width="3.6" height="170" fill="#6e6b66" />
     <rect x="599" y="196" width="2" height="40" fill="#e5ddd0" />
+    <circle class="beacon" cx="600" cy="193" r="2.4" fill="#fff4d6" />
     <path d="M594,262 L597.5,238 L602.5,238 L606,262 Z" fill="#efe9de" />
     <ellipse cx="600" cy="270" rx="34" ry="10" fill="#f2ece1" />
     <ellipse cx="600" cy="270" rx="28" ry="4" fill="#3a4250" />
@@ -97,20 +106,148 @@
 
   <!-- long low pier/warehouse line with warm glowing lights along the water's edge -->
   <rect x="60" y="448" width="1080" height="7" fill="#3e3a38" />
-  <path d="M66,451 L1134,451" stroke="#f7c87e" stroke-width="3" stroke-dasharray="3 37" opacity="0.9" />
+  <path class="pier" d="M66,451 L1134,451" stroke="#f7c87e" stroke-width="3" stroke-dasharray="3 37" opacity="0.9" />
 
   <!-- bay water -->
   <rect x="0" y="460" width="1200" height="80" fill="url(#water-seattle)" />
-  <g stroke="#dbe4ec" stroke-width="1.5" fill="none" opacity="0.15">
+  <g class="shimmer" stroke="#dbe4ec" stroke-width="1.5" fill="none" opacity="0.15">
     <path d="M80,478 q20,-6 40,0 t40,0 M420,500 q20,-6 40,0 t40,0 M860,486 q20,-6 40,0 t40,0 M240,525 q20,-6 40,0 t40,0" />
   </g>
 
+  <!-- sun-glitter: broken gold reflection running down the bay under the sun -->
+  <g class="glitter" fill="#ffe3b0">
+    <rect x="678" y="466" width="44" height="2" rx="1" />
+    <rect x="684" y="476" width="34" height="2" rx="1" />
+    <rect x="674" y="486" width="52" height="2" rx="1" />
+    <rect x="682" y="497" width="38" height="2" rx="1" />
+    <rect x="672" y="508" width="56" height="2" rx="1" />
+    <rect x="684" y="519" width="34" height="2" rx="1" />
+    <rect x="676" y="530" width="48" height="2" rx="1" />
+  </g>
+
   <!-- ferry, lower-left third: dark hull, white superstructure -->
-  <g>
+  <g class="ferry">
     <path d="M240,494 L412,494 L396,512 L252,512 Z" fill="#2c3238" />
     <rect x="268" y="478" width="112" height="16" rx="2" fill="#f2f2ee" />
     <rect x="286" y="468" width="46" height="10" rx="2" fill="#f2f2ee" />
     <path d="M356,466 L368,466 L364,478 L352,478 Z" fill="#b8aca0" />
     <path d="M276,486 L372,486" stroke="#5a626a" stroke-width="2.5" stroke-dasharray="3 5" />
   </g>
+
+  <!-- a small sailboat in the bay below the skyline (centered for mobile) -->
+  <g class="sailboat">
+    <path d="M557,470 L557,499 L543,499 Z" fill="#f2f2ee" />
+    <path d="M560,476 L560,499 L574,499 Z" fill="#e6e0d4" />
+    <line x1="557" y1="469" x2="557" y2="500" stroke="#6b5f54" stroke-width="1" />
+    <path d="M541,500 L575,500 L569,508 L547,508 Z" fill="#2c3238" />
+  </g>
 </svg>
+
+<style>
+  .ferry {
+    animation: ferry 26s ease-in-out infinite alternate;
+  }
+  @keyframes ferry {
+    from {
+      transform: translateX(-18px) translateY(0);
+    }
+    to {
+      transform: translateX(34px) translateY(-2px);
+    }
+  }
+  .beacon {
+    animation: beacon 2.4s ease-in-out infinite;
+  }
+  @keyframes beacon {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .shimmer {
+    animation: shimmer 5s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%,
+    100% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.24;
+    }
+  }
+  .pier {
+    animation: pier 3.6s ease-in-out infinite;
+  }
+  @keyframes pier {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .sailboat {
+    animation: sail 34s ease-in-out infinite alternate;
+  }
+  @keyframes sail {
+    from {
+      transform: translate(0, 0);
+    }
+    to {
+      transform: translate(-44px, -2px);
+    }
+  }
+  .glitter rect {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0.5;
+    animation: glint 3s ease-in-out infinite;
+  }
+  .glitter rect:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+  .glitter rect:nth-child(3) {
+    animation-delay: 1s;
+  }
+  .glitter rect:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .glitter rect:nth-child(5) {
+    animation-delay: 0.8s;
+  }
+  .glitter rect:nth-child(6) {
+    animation-delay: 1.3s;
+  }
+  .glitter rect:nth-child(7) {
+    animation-delay: 0.6s;
+  }
+  @keyframes glint {
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: scaleX(0.82);
+    }
+    50% {
+      opacity: 0.65;
+      transform: scaleX(1.05);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ferry,
+    .beacon,
+    .shimmer,
+    .pier,
+    .sailboat,
+    .glitter rect {
+      animation: none;
+    }
+    .glitter rect {
+      opacity: 0.4;
+    }
+  }
+</style>

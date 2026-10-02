@@ -7,6 +7,7 @@
     IconArrowDown,
     IconBrandGithub,
     IconBrandLinkedin,
+    IconCircleCheck,
     IconFileDownload,
     IconSend2,
   } from "@tabler/icons-svelte";
@@ -17,6 +18,7 @@
   import ScenePullman from "$lib/components/scenes/scene-pullman.svelte";
   import SceneSeattle from "$lib/components/scenes/scene-seattle.svelte";
   import SceneDenver from "$lib/components/scenes/scene-denver.svelte";
+  import Birds from "$lib/components/scenes/birds.svelte";
   import { cn } from "$lib/utils.js";
   import { PROJECTS, LIVE_PROJECTS } from "$lib/config/projects.js";
 
@@ -26,11 +28,18 @@
   const STACK = [
     "SvelteKit",
     "TypeScript",
-    "shadcn-svelte",
+    "Server endpoints",
     "TanStack Table",
-    "Python",
     "SQL",
+    "Vitest",
   ];
+
+  /** A few live apps surfaced in the hero so the work is visible immediately,
+      without waiting for the scroll down to the Denver carousel. */
+  const PEEK = ["Sabermetric Seer", "Market Pulse", "Fantasy Football"]
+    .map((t) => LIVE_PROJECTS.find((p) => p.title === t))
+    .filter((p): p is (typeof LIVE_PROJECTS)[number] => p !== undefined);
+  const PEEK_MORE = LIVE_PROJECTS.length - PEEK.length;
 
   const CONTACTS = [
     {
@@ -102,6 +111,57 @@
     return Math.max(0, Math.min(1, 1 - Math.abs(sceneIndex - i)));
   }
 
+  // ---- Trip nav: the road-trip route drawn down the edge ----
+  /** Which stop is currently centered (0 Pullman · 1 Seattle · 2 Denver). */
+  const activeStop = $derived(Math.round(sceneIndex));
+
+  const STOPS = [
+    { label: "Pullman", id: "" },
+    { label: "Seattle", id: "seattle" },
+    { label: "Denver", id: "projects" },
+  ];
+
+  function prefersReduced(): boolean {
+    return (
+      browser && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
+  function scrollToStop(i: number) {
+    if (!browser) return;
+    const behavior: ScrollBehavior = prefersReduced() ? "auto" : "smooth";
+    if (!STOPS[i].id) {
+      window.scrollTo({ top: 0, behavior });
+      return;
+    }
+    document
+      .getElementById(STOPS[i].id)
+      ?.scrollIntoView({ behavior, block: "start" });
+  }
+
+  /** Scroll-reveal: fade + rise each block as it enters the viewport. */
+  function reveal(node: HTMLElement, delay = 0) {
+    if (!browser || prefersReduced()) {
+      node.classList.add("revealed");
+      return;
+    }
+    node.classList.add("reveal-init");
+    if (delay) node.style.transitionDelay = `${delay}ms`;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            node.classList.add("revealed");
+            io.unobserve(node);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(node);
+    return { destroy: () => io.disconnect() };
+  }
+
   // ---- Projects carousel (Denver) ----
   let track: HTMLElement | undefined = $state();
   let canPrev = $state(false);
@@ -154,7 +214,55 @@
   {/each}
   <!-- Contrast scrim so text stays readable over the illustrations -->
   <div class="absolute inset-0 bg-linear-to-b from-black/40 via-black/15 to-black/50"></div>
+  <!-- Ambient birds drifting across the sky for depth -->
+  <Birds />
 </div>
+
+<!-- Trip nav: the route draws itself as you travel; pins light up at each stop
+     and jump-scroll on click. Desktop only, it'd crowd a phone. -->
+<nav
+  class="fixed right-4 top-1/2 z-30 hidden -translate-y-1/2 lg:block"
+  aria-label="Trip progress"
+>
+  <div class="relative h-52 w-4">
+    <!-- route track + the stretch travelled so far -->
+    <div
+      class="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/25"
+    ></div>
+    <div
+      class="absolute left-1/2 top-0 w-px -translate-x-1/2 bg-white/90 transition-[height] duration-150 ease-out"
+      style="height: {progress * 100}%;"
+    ></div>
+    {#each STOPS as stop, i (stop.label)}
+      {@const reached = sceneIndex >= i - 0.35}
+      {@const active = activeStop === i}
+      <button
+        type="button"
+        onclick={() => scrollToStop(i)}
+        class="group absolute left-1/2 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+        style="top: {i * 50}%;"
+        aria-label={`Go to ${stop.label}`}
+        aria-current={active ? "true" : undefined}
+      >
+        <span
+          class={cn(
+            "block size-2.5 rounded-full border transition-all duration-200",
+            reached ? "border-white bg-white" : "border-white/50 bg-black/30",
+            active && "scale-150 ring-2 ring-white/40",
+          )}
+        ></span>
+        <span
+          class={cn(
+            "pointer-events-none absolute right-full mr-2 rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[11px] font-medium whitespace-nowrap text-white backdrop-blur transition-opacity duration-200",
+            active ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+          )}
+        >
+          {stop.label}
+        </span>
+      </button>
+    {/each}
+  </div>
+</nav>
 
 <div class="-mx-4 flex flex-col">
   <!-- STOP 1 · PULLMAN — Mile 0: who you are, and the card that says it twice -->
@@ -208,6 +316,33 @@
         </a>
       </div>
 
+      <!-- Live-work peek: proof above the fold, one tap straight into a real
+           app so a 10-second visitor sees the work exists before the scroll. -->
+      <div
+        class="flex flex-wrap items-center justify-center gap-1.5 lg:justify-start"
+      >
+        <span class="text-xs font-medium text-white/70">Live now:</span>
+        {#each PEEK as p (p.slug)}
+          <a
+            href={p.slug}
+            class="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur transition-colors hover:bg-black/70"
+          >
+            <span
+              class="size-1.5 rounded-full bg-emerald-400"
+              aria-hidden="true"
+            ></span>
+            {p.title}
+          </a>
+        {/each}
+        {#if PEEK_MORE > 0}
+          <a
+            href="#projects"
+            class="text-xs font-medium text-white/70 underline-offset-4 hover:text-white hover:underline"
+            >+{PEEK_MORE} more</a
+          >
+        {/if}
+      </div>
+
       <div class="mt-4 lg:hidden">
         <PlayerCard />
       </div>
@@ -233,9 +368,11 @@
        never depends on where the hills happen to be. Drop a real photo
        reel back in once there are real shots worth showing. -->
   <section
-    class="relative flex min-h-screen flex-col items-center justify-center px-4 py-24 lg:px-12"
+    id="seattle"
+    class="relative flex min-h-screen scroll-mt-6 flex-col items-center justify-center px-4 py-16 lg:px-12"
   >
     <div
+      use:reveal
       class="w-full max-w-lg rounded-2xl border border-white/20 bg-black/45 p-6 backdrop-blur sm:p-8"
     >
       <Badge variant="outline" class={sectionLabelClass()}>
@@ -264,7 +401,7 @@
     <Badge variant="outline" class={cn(sectionLabelClass(), "w-fit")}>
       📍 The Rockies · Denver, Colorado
     </Badge>
-    <div>
+    <div use:reveal>
       <h2
         class="drop-shadow-lg font-serif text-3xl font-bold text-white"
       >
@@ -272,11 +409,12 @@
       </h2>
       <p class="drop-shadow-md mt-1 text-sm text-white/85">
         {LIVE_PROJECTS.length} live explorers, each hand-rolled and pointed at
-        one public dataset. Slide through them — they're all working.
+        one public dataset — most with their own typed SvelteKit server
+        endpoints, caching, and tests. Slide through them — they're all working.
       </p>
     </div>
 
-    <div class="relative">
+    <div class="relative" use:reveal={120}>
       <button
         class="bg-black/30 hover:bg-black/50 absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full p-2 text-white backdrop-blur transition disabled:cursor-not-allowed disabled:opacity-25"
         aria-label="Previous projects"
@@ -330,37 +468,65 @@
                 </Card.Footer>
               </Card.Root>
             {:else}
-              <a href={project.slug}>
-                <Card.Root
-                  class="h-full transition-shadow hover:shadow-xl"
-                >
-                  <Card.Header>
-                    <div class="flex items-center justify-between gap-2">
-                      <Card.Title class="text-lg">
-                        {project.title}
-                      </Card.Title>
-                      <IconArrowRight
-                        class="text-muted-foreground size-4 shrink-0"
-                      />
-                    </div>
-                    <Card.Description>
-                      {project.description}
-                    </Card.Description>
-                  </Card.Header>
-                  <Card.Footer class="gap-1.5">
-                    {#if project.source}
-                      <Badge
-                        variant="outline"
-                        class="font-mono text-[10px]">{project.source}</Badge>
-                    {/if}
-                    {#each project.tags as tag (tag)}
-                      <Badge variant="secondary">
-                        {tag}
-                      </Badge>
-                    {/each}
-                  </Card.Footer>
-                </Card.Root>
-              </a>
+              <Card.Root
+                class="relative h-full transition-shadow hover:shadow-xl"
+              >
+                <Card.Header>
+                  <div class="flex items-center justify-between gap-2">
+                    <Card.Title class="text-lg">
+                      <a
+                        href={project.slug}
+                        class="after:absolute after:inset-0">{project.title}</a
+                      >
+                    </Card.Title>
+                    <IconArrowRight
+                      class="text-muted-foreground size-4 shrink-0"
+                    />
+                  </div>
+                  <Card.Description>
+                    {project.description}
+                  </Card.Description>
+                  {#if project.tech}
+                    <p
+                      class="text-muted-foreground mt-2 line-clamp-3 text-xs leading-relaxed"
+                    >
+                      {project.tech}
+                    </p>
+                  {/if}
+                </Card.Header>
+                <Card.Footer class="flex-wrap gap-1.5">
+                  {#if project.source}
+                    <Badge
+                      variant="outline"
+                      class="font-mono text-[10px]">{project.source}</Badge>
+                  {/if}
+                  {#each project.tags as tag (tag)}
+                    <Badge variant="secondary">
+                      {tag}
+                    </Badge>
+                  {/each}
+                  {#if project.tested}
+                    <Badge
+                      variant="outline"
+                      class="gap-1 border-emerald-500/30 text-[10px] text-emerald-600 dark:text-emerald-400"
+                    >
+                      <IconCircleCheck class="size-3" />
+                      Tested
+                    </Badge>
+                  {/if}
+                  {#if project.repo}
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="hover:text-primary text-muted-foreground relative z-10 ml-auto inline-flex items-center gap-1 text-xs font-medium underline-offset-4 hover:underline"
+                    >
+                      <IconBrandGithub class="size-3.5" />
+                      Code
+                    </a>
+                  {/if}
+                </Card.Footer>
+              </Card.Root>
             {/if}
           </div>
         {/each}
@@ -378,6 +544,7 @@
 
     <!-- End of the road: an actual destination, not a vibe -->
     <div
+      use:reveal
       class="relative mt-4 overflow-hidden rounded-2xl border border-white/20 bg-linear-to-br from-black/60 via-black/45 to-black/60 p-6 shadow-2xl backdrop-blur sm:p-8"
     >
       <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
@@ -429,3 +596,21 @@
     </div>
   </section>
 </div>
+
+<style>
+  /* Scroll-reveal: content starts lowered + transparent, settles on arrival.
+     Classes are toggled by the `reveal` action; reduced-motion skips straight
+     to revealed. :global because the action adds the classes at runtime. */
+  :global(.reveal-init) {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  :global(.reveal-init.revealed) {
+    opacity: 1;
+    transform: none;
+  }
+</style>
