@@ -33,6 +33,18 @@
   <rect width="1200" height="540" fill="url(#sky-pullman)" />
   <ellipse cx="700" cy="96" rx="380" ry="60" fill="#f8ecd9" opacity="0.35" />
 
+  <!-- soft clouds drifting over the Palouse -->
+  <g class="cloud-a" fill="#fdf8ef" opacity="0.55">
+    <ellipse cx="200" cy="70" rx="46" ry="14" />
+    <ellipse cx="236" cy="63" rx="34" ry="16" />
+    <ellipse cx="168" cy="66" rx="30" ry="12" />
+  </g>
+  <g class="cloud-b" fill="#fdf8ef" opacity="0.4">
+    <ellipse cx="880" cy="58" rx="40" ry="12" />
+    <ellipse cx="912" cy="52" rx="30" ry="14" />
+    <ellipse cx="852" cy="54" rx="26" ry="10" />
+  </g>
+
   <!-- deeply rolling ridges, one dome flowing into the next -->
   <path d="M-40,112 C80,82 200,122 340,96 S560,126 700,90 S940,122 1100,86 L1240,104 L1240,540 L-40,540 Z" fill="#a9b27e" />
   <path d="M-40,170 C100,138 260,180 420,150 S640,184 800,146 S1040,180 1240,150 L1240,540 L-40,540 Z" fill="#c4a86b" />
@@ -46,23 +58,42 @@
     {#each HOUSES as hse, i (hse.x)}
       {@const wallH = Math.round(hse.h * 0.55)}
       <rect x={hse.x} y={BASE - wallH} width={hse.w} height={wallH} fill={WALLS[i % 4]} />
-      <polygon points={`{hse.x - 1.5},${BASE - wallH} {hse.x + hse.w + 1.5},${BASE - wallH} {hse.x + hse.w / 2},${BASE - hse.h}`} fill={ROOFS[i % 2]} />
+      <polygon points={`${hse.x - 1.5},${BASE - wallH} ${hse.x + hse.w + 1.5},${BASE - wallH} ${hse.x + hse.w / 2},${BASE - hse.h}`} fill={ROOFS[i % 2]} />
       {#if i % 3 === 0}
         <rect x={hse.x + hse.w * 0.75} y={BASE - hse.h - 2} width="1.6" height={hse.h * 0.38} fill="#4a4038" />
       {/if}
     {/each}
 
-    <!-- clock tower: simple clean campanile silhouette, no muddy detail -->
-    <rect x="603.5" y={BASE - 36} width="7" height="36" fill="#a8553a" />
-    <rect x="600" y={BASE - 44} width="14" height="8" fill="#ede6da" />
-    <polygon points={`599,${BASE - 44} 607,${BASE - 58} 615,${BASE - 44}`} fill="#54606e" />
+    <!-- clock tower: WSU-style brick campanile — the town's one landmark -->
+    <!-- plinth grounds the shaft -->
+    <rect x="601" y={BASE - 2} width="12" height="2" fill="#8f4832" />
+    <!-- shaft with lit left edge + shadowed right edge for round-tower depth -->
+    <rect x="602.5" y={BASE - 36} width="9" height="34" fill="#a8553a" />
+    <rect x="602.5" y={BASE - 36} width="2" height="34" fill="#c56a46" opacity="0.5" />
+    <rect x="608.5" y={BASE - 36} width="3" height="34" fill="#8f4832" opacity="0.6" />
+    <!-- cream cornice between shaft and belfry -->
+    <rect x="601" y={BASE - 38} width="12" height="2.6" fill="#ede6da" />
+    <!-- belfry with the clock face set into it -->
+    <rect x="601.5" y={BASE - 50} width="11" height="11" fill="#b85c3a" />
+    <circle cx="607" cy={BASE - 44.5} r="4" fill="#ede6da" stroke="#54606e" stroke-width="0.9" />
+    <line x1="607" y1={BASE - 44.5} x2="607" y2={BASE - 48} stroke="#54606e" stroke-width="0.8" stroke-linecap="round" />
+    <line x1="607" y1={BASE - 44.5} x2="609.2" y2={BASE - 43.6} stroke="#54606e" stroke-width="0.8" stroke-linecap="round" />
+    <!-- flat top: the belfry cornice caps the tower, Bryan Hall is flat-roofed -->
+    <rect x="599.5" y={BASE - 52.5} width="15" height="2.8" fill="#ede6da" />
 
     <!-- a few terrace trees -->
     <g fill="#2f4a22">
       {#each CONIF_X as x (x)}
-        <polygon points={`{x - 3},${BASE} {x},${BASE - 15} {x + 3},${BASE}`} />
+        <polygon points={`${x - 3},${BASE} ${x},${BASE - 15} ${x + 3},${BASE}`} />
       {/each}
     </g>
+  </g>
+
+  <!-- chimney smoke curling up from the town -->
+  <g class="smoke" fill="#d8d2c7">
+    <circle class="puff" cx="538" cy="231" r="2.2" />
+    <circle class="puff puff-b" cx="538" cy="231" r="2.6" />
+    <circle class="puff puff-c" cx="538" cy="231" r="2" />
   </g>
 
   <!-- the next gold ridge rises immediately behind (in front of) the town,
@@ -93,3 +124,62 @@
     <circle cx="1096" cy="546" r="40" />
   </g>
 </svg>
+
+<style>
+  .cloud-a {
+    animation: drift-a 60s ease-in-out infinite alternate;
+  }
+  .cloud-b {
+    animation: drift-b 82s ease-in-out infinite alternate;
+  }
+  @keyframes drift-a {
+    from {
+      transform: translateX(-30px);
+    }
+    to {
+      transform: translateX(55px);
+    }
+  }
+  @keyframes drift-b {
+    from {
+      transform: translateX(35px);
+    }
+    to {
+      transform: translateX(-45px);
+    }
+  }
+  .puff {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: rise 6s linear infinite;
+  }
+  .puff-b {
+    animation-delay: 2s;
+  }
+  .puff-c {
+    animation-delay: 4s;
+  }
+  @keyframes rise {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.6);
+    }
+    20% {
+      opacity: 0.45;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-7px, -26px) scale(1.7);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cloud-a,
+    .cloud-b,
+    .puff {
+      animation: none;
+    }
+    .puff {
+      opacity: 0;
+    }
+  }
+</style>

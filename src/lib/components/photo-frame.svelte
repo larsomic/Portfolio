@@ -36,7 +36,9 @@
       {alt}
       loading="lazy"
       decoding="async"
-      class="absolute inset-0 size-full object-cover"
+      draggable="false"
+      class="pointer-events-none absolute inset-0 size-full object-cover select-none"
+      style="-webkit-user-drag: none;"
       onerror={() => (failed = true)}
     />
   {/if}

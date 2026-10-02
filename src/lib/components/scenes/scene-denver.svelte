@@ -20,11 +20,16 @@
       <stop offset="0.55" stop-color="#8cc3ea" />
       <stop offset="1" stop-color="#c8e1f4" />
     </linearGradient>
+    <!-- contrail: opaque at the tail, fading to nothing behind -->
+    <linearGradient id="contrail" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
   </defs>
   <rect width="1200" height="540" fill="url(#sky-denver)" />
 
   <!-- thin cirrus wisps, plus a denser pale band hugging the summit line -->
-  <g fill="#eaf4fb">
+  <g class="cirrus" fill="#eaf4fb">
     <ellipse cx="300" cy="58" rx="140" ry="7" opacity="0.35" />
     <ellipse cx="228" cy="92" rx="90" ry="5" opacity="0.28" />
     <ellipse cx="720" cy="48" rx="160" ry="8" opacity="0.4" />
@@ -54,6 +59,19 @@
     d="M0,380 L120,342 L240,370 L330,344 L420,285 L520,332 L640,360 L760,342 L900,302 L1020,286 L1100,302 L1200,292 L1200,540 L0,540 Z"
     fill="#4e6ea8"
   />
+
+  <!-- a distant airliner climbing out of DIA, trailing a contrail -->
+  <g class="airliner">
+    <rect x="613" y="69.2" width="92" height="1.6" rx="0.8" fill="url(#contrail)" />
+    <g fill="#3f4b55">
+      <path
+        d="M585,70 C590,68.5 606,68.6 613,69 C614,69.3 614,70.7 613,71 C606,71.4 590,71.5 585,70 Z"
+      />
+      <path d="M600,70 L611,76 L607,70 Z" />
+      <path d="M600,70 L611,64 L607,70 Z" />
+      <path d="M609,70 L614,65.5 L612.5,70 Z" />
+    </g>
+  </g>
 
   <!-- downtown skyline: rectilinear slabs, light from upper-left -->
   <g>
@@ -123,3 +141,37 @@
     <circle cx="870" cy="468" r="12" />
   </g>
 </svg>
+
+<style>
+  .cirrus {
+    animation: cirrus 72s ease-in-out infinite alternate;
+  }
+  @keyframes cirrus {
+    from {
+      transform: translateX(-28px);
+    }
+    to {
+      transform: translateX(48px);
+    }
+  }
+  .airliner {
+    animation: airliner 58s linear infinite;
+  }
+  @keyframes airliner {
+    from {
+      transform: translateX(680px);
+    }
+    to {
+      transform: translateX(-760px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cirrus {
+      animation: none;
+    }
+    .airliner {
+      animation: none;
+      transform: translateX(-120px);
+    }
+  }
+</style>
