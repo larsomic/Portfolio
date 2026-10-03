@@ -7,9 +7,12 @@
     IconArrowDown,
     IconBrandGithub,
     IconBrandLinkedin,
+    IconBrowser,
     IconCircleCheck,
+    IconCloud,
     IconFileDownload,
     IconSend2,
+    IconServer,
   } from "@tabler/icons-svelte";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
@@ -40,6 +43,38 @@
     .map((t) => LIVE_PROJECTS.find((p) => p.title === t))
     .filter((p): p is (typeof LIVE_PROJECTS)[number] => p !== undefined);
   const PEEK_MORE = LIVE_PROJECTS.length - PEEK.length;
+
+  /** Hard numbers for the Seattle "track record" stop. */
+  const STATS = [
+    { value: "3,000+", label: "daily users on a portal I built" },
+    { value: "~61%", label: "faster API (900ms \u2192 350ms)" },
+    { value: `${LIVE_PROJECTS.length}`, label: "live apps in this portfolio" },
+    { value: "4+ yrs", label: "shipping production code" },
+  ];
+
+  /** Capability triad \u2014 counters the "frontend hobbyist" read. */
+  const CAPABILITIES = [
+    {
+      title: "Frontend",
+      icon: IconBrowser,
+      blurb:
+        "Accessible, responsive interfaces that turn raw data into something you can explore.",
+      tools: ["React", "Svelte", "TypeScript", "Tailwind"],
+    },
+    {
+      title: "Backend",
+      icon: IconServer,
+      blurb:
+        "Typed server endpoints, API design, and SQL/query tuning behind the UI.",
+      tools: ["Node", "REST APIs", "SQL", "caching"],
+    },
+    {
+      title: "Cloud & CI/CD",
+      icon: IconCloud,
+      blurb: "Infrastructure as code and zero-downtime deploys on AWS.",
+      tools: ["AWS", "Terraform", "GitHub Actions"],
+    },
+  ];
 
   const CONTACTS = [
     {
@@ -280,18 +315,26 @@
         📍 Mile 0 · The Palouse, Washington
       </Badge>
       <h1
-        class="drop-shadow-lg font-serif text-4xl leading-tight font-bold text-white sm:text-5xl"
+        class="drop-shadow-lg font-serif text-5xl leading-none font-bold text-white sm:text-6xl"
       >
-        I build the stats pages I wish existed.
+        Michael Larson
       </h1>
+      <p class="drop-shadow text-sm font-semibold tracking-wide text-white/95">
+        Software Engineer II @ Comcast · Denver, CO ·
+        <span class="text-emerald-300">open to senior &amp; lead roles</span>
+      </p>
+      <p
+        class="drop-shadow-md font-serif text-xl font-medium text-white/95 italic sm:text-2xl"
+      >
+        "I build the stats pages I wish existed."
+      </p>
       <p
         class="drop-shadow-md text-base leading-relaxed text-white/90 sm:text-lg"
       >
-        I'm Michael — a software engineer in Denver who spends Saturdays
-        turning public data into things you can actually poke at: tonight's
-        MLB board, my fantasy league's scoreboard, eighty years of March
-        Madness. Every page on this site is hand-rolled Svelte pointed
-        straight at a real API.
+        By day, production React and cloud infrastructure at Comcast. By night,
+        public APIs turned into live data explorers you can actually poke at —
+        frontend, server endpoints, and all. This site is the drive from where
+        I started to where I am now.
       </p>
 
       <!-- Keyword chips: the six-month scan a hiring manager actually does -->
@@ -362,34 +405,65 @@
     </div>
   </section>
 
-  <!-- STOP 2 · SEATTLE — a breather between the pitch and the work.
-       No photos here: an illustrated skyline doesn't need a photographic
-       one competing with it. The copy sits on a solid panel so contrast
-       never depends on where the hills happen to be. Drop a real photo
-       reel back in once there are real shots worth showing. -->
+  <!-- STOP 2 · SEATTLE — the track record: hard numbers + what I actually do.
+       The midpoint of the trip carries the professional proof. -->
   <section
     id="seattle"
-    class="relative flex min-h-screen scroll-mt-6 flex-col items-center justify-center px-4 py-16 lg:px-12"
+    class="relative flex min-h-screen scroll-mt-6 flex-col justify-center gap-8 px-4 py-24 lg:px-12"
   >
-    <div
-      use:reveal
-      class="w-full max-w-lg rounded-2xl border border-white/20 bg-black/45 p-6 backdrop-blur sm:p-8"
-    >
-      <Badge variant="outline" class={sectionLabelClass()}>
-        🥾 Off the Clock · Denver &amp; wherever the trailhead is
+    <div use:reveal class="flex flex-col gap-2">
+      <Badge variant="outline" class={cn(sectionLabelClass(), "w-fit")}>
+        📍 Puget Sound · Seattle, Washington
       </Badge>
       <h2
-        class="mt-3 font-serif text-3xl font-bold text-white sm:text-4xl"
+        class="drop-shadow-lg font-serif text-3xl font-bold text-white sm:text-4xl"
       >
-        Same curiosity, worse altitude
+        The track record
       </h2>
       <p
-        class="mt-3 text-sm leading-relaxed text-white/85 sm:text-base"
+        class="drop-shadow-md max-w-xl text-sm leading-relaxed text-white/85 sm:text-base"
       >
-        Off the laptop, it's climbs I keep overestimating, a section-612
-        voice at Mile High, and trails I'd call "moderate" to anyone who'd
-          listen. The curiosity is the same one that shows up in the code.
+        Four years turning requirements into shipped, measurable software —
+        at work and after hours.
       </p>
+    </div>
+
+    <!-- Hard numbers -->
+    <div use:reveal={80} class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {#each STATS as s (s.label)}
+        <div
+          class="rounded-2xl border border-white/20 bg-black/45 p-4 text-center backdrop-blur sm:text-left"
+        >
+          <div class="font-serif text-2xl font-bold text-white sm:text-3xl">
+            {s.value}
+          </div>
+          <div class="mt-1 text-xs leading-snug text-white/75">{s.label}</div>
+        </div>
+      {/each}
+    </div>
+
+    <!-- What I do -->
+    <div use:reveal={160} class="grid gap-3 sm:grid-cols-3">
+      {#each CAPABILITIES as c (c.title)}
+        <div
+          class="rounded-2xl border border-white/20 bg-black/45 p-5 backdrop-blur"
+        >
+          <div class="flex items-center gap-2">
+            <c.icon class="size-5 text-emerald-300" />
+            <h3 class="font-semibold text-white">{c.title}</h3>
+          </div>
+          <p class="mt-2 text-sm leading-relaxed text-white/80">{c.blurb}</p>
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            {#each c.tools as t (t)}
+              <Badge
+                variant="outline"
+                class={cn(sectionLabelClass(), "font-mono text-[10px]")}
+                >{t}</Badge
+              >
+            {/each}
+          </div>
+        </div>
+      {/each}
     </div>
   </section>
 
