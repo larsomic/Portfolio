@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/larsomic/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/larsomic/Portfolio/actions/workflows/ci.yml)
 
-A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 5 (runes)**, **shadcn-svelte**, and **Tailwind CSS v4**. Every project is powered by real public data — MLB, NFL (Sleeper), and NCAA APIs, Colorado open data, and DataUSA.
+A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 5 (runes)**, **shadcn-svelte**, and **Tailwind CSS v4**. Every project is powered by real public data — MLB, NFL (Sleeper), and NCAA APIs, Colorado open data, DataUSA, and Alpaca market data.
 
 > 🔗 **Live site:** <https://mike-larson.me/>
 
@@ -13,6 +13,7 @@ A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 
 | [**Sabermetric Seer**](https://mike-larson.me/sabermetric-seer) | MLB explorer: league leaders, standings, transactions, a game center with box scores and pitch logs, and head-to-head player comparison (career-per-year charts, traded-player season merging) | [MLB Stats API](https://statsapi.mlb.com/api/v1) |
 | [**Fantasy Football**](https://mike-larson.me/fantasy-football) | My Sleeper head-to-head league: member cards with full season history (walked backwards through the previous-league chain), weekly scores with per-player game states and round-robin records | [Sleeper API](https://docs.sleeper.com/) |
 | [**US Population Comparer**](https://mike-larson.me/us-population-comparer) | Side-by-side comparison of any two US states, metros, or counties: population, diversity, income, jobs, housing, commute, and health measures | [DataUSA](https://datausa.io/about/api/) |
+| [**Market Pulse**](https://mike-larson.me/market-pulse) | End-of-day equities explorer: daily price bars, a growth-of-$100 benchmark overlay, top movers, and the newswire behind each move — served through typed SvelteKit server endpoints that proxy Alpaca with server-held credentials and a per-card error taxonomy | [Alpaca Market Data API](https://alpaca.markets/) |
 | [**Colorado Data**](https://mike-larson.me/colorado-data) | Hub for four Colorado open-data explorers (below) | [data.colorado.gov](https://data.colorado.gov) |
 | ↳ [Denver Accidents](https://mike-larson.me/denver-accidents) | Map + trend analysis of Denver traffic accidents | Denver Open Data (`cpwf-cznk`) |
 | ↳ [Cannabis Economy](https://mike-larson.me/colorado-data/cannabis-economy) | County-by-month retail/medical sales, an animated "bubbles" race through the years, and cumulative growth views | Colorado Open Data (`j7a3-jgd3`) |
@@ -22,7 +23,7 @@ A collection of interactive data explorers built with **SvelteKit 2**, **Svelte 
 | ↳ [Road to the Championship](https://mike-larson.me/march-madness/tournament) | Replay any season's bracket back to 1939 — First Four through the title game, with seeds, scores, venues, attendance, and Elo swings on every game | College Basketball Data |
 | ↳ [Cinderella Tracker](https://mike-larson.me/march-madness/cinderella) | Eighty-six seasons of upset math: seed-matchup danger rates, how double-digit seeds fare year by year, the 25 biggest shocks ever, and Final Four royalty | College Basketball Data |
 
-The homepage is a scroll-driven story through three scenes (Pullman, WA → Denver, CO → Seattle, WA) built with SVG and CSS only.
+The homepage is a scroll-driven story through three hand-built scenes (Pullman, WA → Seattle, WA → Denver, CO) — SVG and CSS only, with ambient motion (drifting birds and clouds, a gliding Elliott Bay ferry, a DIA airliner) and a holographic hover on the player card.
 
 ## Tech Stack
 
@@ -67,7 +68,7 @@ src/
 │   ├── components/       # App components + shadcn ui/ primitives
 │   ├── config/           # Navigation routes and project metadata
 │   ├── hooks/            # is-mobile detection, etc.
-│   ├── *.ts              # API service layers (MLB, Sleeper, NCAA, Colorado, DataUSA)
+│   ├── *.ts              # API service layers (MLB, Sleeper, NCAA, Colorado, DataUSA, Alpaca)
 │   └── *.test.ts         # Unit tests for pure data logic
 └── routes/               # One folder per project; components colocated with routes
 ```
@@ -80,7 +81,7 @@ Design conventions:
 
 ## Deployment
 
-Deploys to Netlify via `@sveltejs/adapter-netlify`. Pages render on demand through Node-based Netlify Functions (all routes server-rendered; static assets served from the CDN). Environment variables (`CBBD_API_KEY`, `PUBLIC_EMAILJS_*`) are set in the Netlify UI. See [`vite.config.ts`](vite.config.ts) for adapter configuration.
+Deploys to Netlify via `@sveltejs/adapter-netlify`. Pages render on demand through Node-based Netlify Functions (all routes server-rendered; static assets served from the CDN). Environment variables (`CBBD_API_KEY`, `ALPACA_API_KEY_ID`, `ALPACA_API_SECRET_KEY`, `PUBLIC_EMAILJS_*`) are set in the Netlify UI. See [`vite.config.ts`](vite.config.ts) for adapter configuration.
 
 ## Contact
 

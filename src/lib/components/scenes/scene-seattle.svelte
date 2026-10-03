@@ -79,29 +79,32 @@
     <rect x="1146" y="385" width="4" height="73" fill="#d99c55" />
   </g>
 
-  <!-- Space Needle, centered; saucer just below the frame's midline; Rainier sits clear to the left -->
+  <!-- Space Needle: flaring tripod legs, a cinched waist, the saucer top house
+       with its sloped underbelly, and the spire + beacon -->
   <g>
-    <rect x="598.2" y="270" width="3.6" height="170" fill="#6e6b66" />
-    <rect x="599" y="196" width="2" height="40" fill="#e5ddd0" />
-    <circle class="beacon" cx="600" cy="193" r="2.4" fill="#fff4d6" />
-    <path d="M594,262 L597.5,238 L602.5,238 L606,262 Z" fill="#efe9de" />
-    <ellipse cx="600" cy="270" rx="34" ry="10" fill="#f2ece1" />
-    <ellipse cx="600" cy="270" rx="28" ry="4" fill="#3a4250" />
-    <!-- fringe of fins under the saucer rim -->
-    <g stroke="#e5ddd0" stroke-width="2">
-      <path d="M570,276 L570,282 M580,279 L580,285 M590,280.7 L590,286.7 M600,281 L600,287 M610,280.7 L610,286.7 M620,279 L620,285 M630,276 L630,282" />
+    <!-- hourglass legs: tucked under the saucer, pinched at the waist, flaring
+         gracefully to the base, with V cross-braces (the original silhouette) -->
+    <g stroke="#e9e2d6" stroke-width="3.5" fill="none" stroke-linecap="round">
+      <path d="M582,244 C590,290 596,330 596,360 C596,392 589,424 578,446" />
+      <path d="M618,244 C610,290 604,330 604,360 C604,392 611,424 622,446" />
     </g>
-    <!-- concave legs sweeping to the waist, flaring at the base -->
-    <g stroke="#efe9de" stroke-width="3.5" fill="none" stroke-linecap="round">
-      <path d="M580,278 C591,325 595,360 595,395 C595,415 590,430 578,442" />
-      <path d="M620,278 C609,325 605,360 605,395 C605,415 610,430 622,442" />
+    <ellipse cx="600" cy="360" rx="11" ry="3" fill="#e9e2d6" />
+    <g stroke="#cdc6ba" stroke-width="1.3" fill="none">
+      <path d="M600,258 L589,304 M600,258 L611,304" />
+      <path d="M600,404 L585,432 M600,404 L615,432" />
     </g>
-    <ellipse cx="600" cy="395" rx="12" ry="3" fill="#efe9de" />
-    <!-- V cross-braces -->
-    <g stroke="#e5ddd0" stroke-width="1.5" fill="none">
-      <path d="M600,292 L589,335 M600,292 L611,335" />
-      <path d="M600,415 L585,437 M600,415 L615,437" />
-    </g>
+    <!-- underbelly funnel + collar tying the legs into the saucer -->
+    <path d="M566,240 L584,245 L616,245 L634,240 Z" fill="#dcd4c5" />
+    <ellipse cx="600" cy="245" rx="19" ry="3.5" fill="#e9e2d6" />
+    <!-- top house: halo disc + window band -->
+    <ellipse cx="600" cy="235" rx="40" ry="7.5" fill="#f2ece1" />
+    <ellipse cx="600" cy="238.5" rx="33" ry="2.4" fill="#3a4250" />
+    <!-- roof crown: a tapered hub + cap centered on the disc -->
+    <path d="M590,230 L593,221 L607,221 L610,230 Z" fill="#efe9de" />
+    <rect x="594" y="216.5" width="12" height="5" fill="#e5ddd0" />
+    <!-- spire + beacon -->
+    <rect x="598.5" y="190" width="3" height="27" fill="#d9d1c3" />
+    <circle class="beacon" cx="600" cy="187" r="2.3" fill="#fff4d6" />
   </g>
 
   <!-- long low pier/warehouse line with warm glowing lights along the water's edge -->
