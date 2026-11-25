@@ -42,10 +42,14 @@
       company: "Comcast",
       period: "Apr 2025 – Present",
       bullets: [
-        "Lead developer on a React internal portal (a project within a larger team) used daily by 3,000+ employees for running SQL queries, connecting with support, and AI-assisted query tuning; direct a two-person project team and own the work end-to-end — from solution design and estimation through production rollout — setting code-quality and delivery standards via code review and hands-on guidance.",
-        "Mentored an intern over the past year through onboarding and hands-on technical coaching, guiding them to a full-time conversion and continuing to mentor them as the second engineer on my project.",
-        "Built the frontend/UX for an AI-assisted SQL query-tuning feature, surfacing model-generated tuning suggestions to users within the portal.",
-        "Built a GitHub Actions CI/CD suite with Terraform and the AWS CLI to provision and auto-scale EC2 instances across multiple availability zones, cutting deployments to ~10 minutes with zero-downtime rolling upgrades.",
+        "Built and launched the Fabric Portal from scratch in React and TypeScript, a self-service web front end for Comcast's Trino data platform (3,000 internal users) that replaced per-user driver setup, became new users' starting point for platform docs, and grew to ~300 users since its mid-2025 launch.",
+        "Lead the Fabric Portal end to end, running planning and estimation, demoing weekly releases to a ~15-person team and to the CTO and Chief Data and AI Officer, and directing an offshore contract engineer by writing their tickets and reviewing every one of their 50+ frontend pull requests.",
+        "Built a query tracker that finds each user's queries across every Trino coordinator, largely ending \"where did my query go?\" support questions.",
+        "Integrated three internally built AI tools into the portal (docs Q&A, SQL query enhancement, and natural-language-to-SQL), now used by ~30% of portal users, passing each user's Azure SSO token through to the AI services and letting generated queries run in the query editor in one click.",
+        "Cut Trino fleet provisioning and scaling from ~2 hours to ~10 minutes by replacing a manual, error-prone process with GitHub Actions workflows that run Terraform and the AWS CLI across 4 EC2 clusters of 10-20 nodes each.",
+        "Created the portal's deployment pipeline from nothing with GitHub Actions, shipping weekly releases to 12 on-premises servers across two environments in ~10 minutes with zero-downtime rolling upgrades.",
+        "Resolved 50+ support tickets and several production incidents on call for a 3,000-user internal Trino data platform, including tracing a missing-data report through Elasticsearch query logs to a stale upstream catalog owned by another team and resolving it with my tech lead the same day.",
+        "Mentored an intern for a year through onboarding and technical coaching to a full-time conversion, then ramped him up on Query Fabric until he joined the on-call rotation.",
       ],
     },
     {
@@ -53,9 +57,11 @@
       company: "Meter Group Inc.",
       period: "Dec 2022 – Apr 2025",
       bullets: [
-        "Designed and built, end-to-end, a backend consolidation unifying 6 API services behind a single gateway for a data/analytics platform processing large-scale environmental sensor (IoT) data — reducing average endpoint response time from 900ms to 350ms (~61%) and lowering client load times across platforms.",
-        "Implemented server-side pagination and query optimization over a million-row sensor dataset, reducing initial page load from ~8s to under 500ms and delivering scalable, performant data access.",
-        "Converted Figma designs into responsive, mobile-optimized interfaces with React and MUI, improving mobile UX and contributing to a 60% year-over-year increase in mobile traffic.",
+        "Cut initial page load from ~8s to under 500ms by adding server-side pagination across the backend and the React frontend, so sensor data is no longer fetched and sent in full on every request.",
+        "Migrated 15+ pages of ZENTRA Cloud from server-rendered Django templates to React in a three-month rewrite led by my tech lead, giving customers faster, mobile-friendly pages with a refreshed design and refining the new UI with their feedback.",
+        "Replaced static matplotlib charts with interactive React and Chart.js graphs for thousands of field sensors, downsampling large date ranges and handling gaps and out-of-range readings.",
+        "Resolved 30+ customer-reported issues by email and support ticket, including tracing a missing-sensor-data report from the React UI to a backend time-zone bug and fixing it while pair programming with the backend engineer.",
+        "Made the new React frontend responsive so the product works well on phones, converting Figma designs with React and MUI.",
       ],
     },
     {
@@ -63,9 +69,8 @@
       company: "Meter Group Inc.",
       period: "Apr 2021 – Dec 2022",
       bullets: [
-        "Built an automated end-to-end test suite with Robot Framework simulating frontend user flows, surfacing and resolving 40+ bugs before release and establishing regression coverage for critical paths.",
-        "Resolved 80+ frontend bugs across usability and functionality defects, contributing to a measurable drop in inbound user-reported issues over the following release cycles.",
-        "Improved web app responsiveness and cross-browser compatibility through adaptive/responsive design, validated with cross-device testing to ensure consistent rendering across major browsers and screen sizes.",
+        "Built an automated Robot Framework end-to-end test suite covering critical frontend user flows and wrote the GitHub Actions pipeline that runs it on every deployment, catching 40+ bugs before release.",
+        "Resolved 80+ frontend usability and functionality bugs found through the test suite and reported by users.",
       ],
     },
   ];
@@ -75,23 +80,28 @@
       name: "Personal Portfolio",
       href: "/",
       bullets: [
-        "Crafted a portfolio website leveraging Svelte and shadcn UI, with a focus on contemporary, mobile-responsive design — showcasing software engineering abilities to industry professionals.",
-        "Designed an intuitive interface incorporating backend features such as direct-email functionality, letting potential employers and clients connect effortlessly.",
+        "Built a SvelteKit and TypeScript portfolio of 6 live data explorers over public APIs, most with their own typed server endpoints, caching, and tests.",
+      ],
+    },
+    {
+      name: "Market Pulse",
+      href: "/market-pulse",
+      bullets: [
+        "Built an end-of-day equities explorer with seven server endpoints proxying the Alpaca API using server-held credentials, routing failures through a typed error taxonomy so each card degrades independently.",
       ],
     },
     {
       name: "Sabermetric Seer",
       href: "/sabermetric-seer",
       bullets: [
-        "Programmed a full-stack application using Python and React to interactively explore sabermetric data across seasons and teams, predicting what future player seasons could look like.",
-        "Used TensorFlow's linear regression to analyze how variables like hits, strikeouts, and home runs correlated with wins, and built a visualizer comparing production to earned wages.",
+        "Built a live MLB explorer that normalizes the MLB Stats API through typed parsers and stitches five stat endpoints into one game view with per-endpoint fallbacks.",
       ],
     },
     {
-      name: "Music Video Generator",
+      name: "CrimsonCode 2021 Hackathon",
+      href: "https://github.com/larsomic/CrimsonCode2021",
       bullets: [
-        "Created an engaging UI using Vue and Material UI letting users generate music videos by dragging their clips, with customization via predefined themes and templates.",
-        "Integrated Google Cloud speech-to-text APIs to extract lyrics/narration from audio for theme alignment, and optimized the rendering pipeline to cut render times by ~30%.",
+        "Placed 2nd at Washington State University's CrimsonCode 2021 hackathon on a team of four with a virtual classroom built to keep students connected during COVID, building the feature that switches cameras and microphones on as students' avatars approach each other.",
       ],
     },
   ];
@@ -104,11 +114,14 @@
     "Python",
     "SQL",
     "C#",
+    "Java",
+    "Spring Boot",
     "Node.js",
+    "Trino",
     "AWS",
     "Terraform",
+    "GitHub Actions",
     "CI/CD",
-    "TensorFlow",
     "HTML/CSS",
   ];
 </script>

@@ -46,8 +46,8 @@
 
   /** Hard numbers for the Seattle "track record" stop. */
   const STATS = [
-    { value: "3,000+", label: "daily users on a portal I built" },
-    { value: "~61%", label: "faster API (900ms \u2192 350ms)" },
+    { value: "~300", label: "internal users on a portal I built from scratch" },
+    { value: "8s \u2192 0.5s", label: "page load after server-side pagination" },
     { value: `${LIVE_PROJECTS.length}`, label: "live apps in this portfolio" },
     { value: "4+ yrs", label: "shipping production code" },
   ];
@@ -65,7 +65,7 @@
       title: "Backend",
       icon: IconServer,
       blurb:
-        "Typed server endpoints, API design, and SQL/query tuning behind the UI.",
+        "Typed server endpoints, API design, and SQL behind the UI.",
       tools: ["Node", "REST APIs", "SQL", "caching"],
     },
     {
@@ -321,7 +321,7 @@
       </h1>
       <p class="drop-shadow text-sm font-semibold tracking-wide text-white/95">
         Software Engineer II @ Comcast · Denver, CO ·
-        <span class="text-emerald-300">open to senior &amp; lead roles</span>
+        <span class="text-emerald-300">open to new roles</span>
       </p>
       <p
         class="drop-shadow-md font-serif text-xl font-medium text-white/95 italic sm:text-2xl"
