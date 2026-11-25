@@ -43,7 +43,7 @@
   const SPLITS = [
     { split: "Seasons shipping code", value: "2021 → today" },
     { split: "Day job", value: "SE 2 @ Comcast" },
-    { split: "Daily users on a portal I built", value: "3,000+" },
+    { split: "Users on a portal I built", value: "~300" },
     { split: "Apps in this portfolio", value: `${LIVE_PROJECTS.length}` },
     {
       // Derived from the project config so it can't drift when projects change.
